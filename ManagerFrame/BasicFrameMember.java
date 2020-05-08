@@ -37,8 +37,8 @@ public class BasicFrameMember extends JFrame {
             @Override
             public void windowClosing(WindowEvent e){
                 int result=  JOptionPane.showConfirmDialog(null, "종료하시겠습니까?");
-                if(result == JOptionPane.NO_OPTION)//저장하지않고 종료
-                  return;
+                if(result == JOptionPane.YES_OPTION)
+                    System.exit(0);
             }
         });
             
