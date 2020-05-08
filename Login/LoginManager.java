@@ -14,13 +14,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import ManagerFrame.BasicFrame;
+
 public class LoginManager extends JPanel implements ActionListener{
     public JPanel bigP, p1, p2, p3, p4;
     private JFrame findF1, findF2;
     private JTextField idT, pwT , verifyT;
     private JLabel loginL, findL,  verifyL;
     private JButton loginB, findID, findPW, signupB;
-
+    
     LoginManager() {
         loginL = new JLabel("Manager Login");
         
@@ -86,7 +88,7 @@ public class LoginManager extends JPanel implements ActionListener{
         findID.addActionListener(this);
         findPW.addActionListener(this);
         signupB.addActionListener(this);
-
+        loginB.addActionListener(this);
         
     }
  
@@ -101,8 +103,13 @@ public class LoginManager extends JPanel implements ActionListener{
                JOptionPane.showMessageDialog(this, "올바른 인증번호를 기입하십시오.");
                return;
            }
-            new SignUp();
+            new SignUpManager();
+        }else if(e.getSource()==loginB) {
+            this.setVisible(false);
+            new BasicFrame();
+            
         }
+        
         
     }
     

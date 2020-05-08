@@ -23,6 +23,8 @@ public class FindPW extends JFrame implements ActionListener{
         setBounds(700, 200, 300, 250);
         getContentPane().setLayout(null);
         setVisible(true);
+        setResizable(false);
+        
         lblNewLabel.setFont(new Font("굴림", Font.PLAIN, 19));
         lblNewLabel.setBounds(105, 10, 64, 21);
         getContentPane().add(lblNewLabel);

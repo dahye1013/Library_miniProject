@@ -24,6 +24,8 @@ public class FindID extends JFrame implements ActionListener{
         setBounds(700, 200, 300, 250);
         getContentPane().setLayout(null);
         setVisible(true);
+        setResizable(false);
+        
         lblNewLabel.setFont(new Font("굴림", Font.PLAIN, 19));
         lblNewLabel.setBounds(105, 10, 64, 21);
         getContentPane().add(lblNewLabel);
@@ -48,16 +50,16 @@ public class FindID extends JFrame implements ActionListener{
         textField_1.setBounds(127, 96, 116, 21);
         getContentPane().add(textField_1);
 
-        JButton findB = new JButton("Find");
+        findB = new JButton("Find");
         findB.setBounds(37, 140, 97, 39);
         getContentPane().add(findB);
 
-        JButton canelB = new JButton("Cancel");
-        canelB.setBounds(146, 140, 97, 39);
-        getContentPane().add(canelB);
+        cancelB = new JButton("Cancel");
+        cancelB.setBounds(146, 140, 97, 39);
+        getContentPane().add(cancelB);
         
         findB.addActionListener(this);
-        canelB.addActionListener(this);
+        cancelB.addActionListener(this);
         
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -74,7 +76,8 @@ public class FindID extends JFrame implements ActionListener{
         if(e.getSource()==findB) {
             
         }else if(e.getSource()==cancelB) {
-            this.setVisible(false);
+            System.out.println("dddd");
+            setVisible(false);
         }
         
     }

@@ -10,9 +10,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 public class LoginFrame extends JFrame{
+    static LoginFrame login ;
 	public LoginManager manager;
 	public LoginMember member;
-
+    
     LoginFrame(){
         super("Login");
         
@@ -31,6 +32,10 @@ public class LoginFrame extends JFrame{
         setVisible(true);
 		setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        
+        if(member.getA() == false) {
+            this.setVisible(false);
+        }
         
     }
     

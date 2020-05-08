@@ -13,13 +13,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import ManagerFrame.BasicFrame;
+
 public class LoginMember extends JPanel implements ActionListener{
     public JPanel bigP, p1, p2, p3, p4;
     private JFrame findF1, findF2;
     private JTextField idT, pwT ;
     private JLabel loginL, findL,  verifyL, signL;
     private JButton loginB, findID, findPW, signB;
-
+    boolean a=true;
     LoginMember() {
         loginL = new JLabel("Member Login");
         
@@ -91,7 +93,11 @@ public class LoginMember extends JPanel implements ActionListener{
         findID.addActionListener(this);
         findPW.addActionListener(this);
         signB.addActionListener(this);
-
+        loginB.addActionListener(this);
+    }
+    
+    public void managerSet() {
+        
     }
  
     @Override
@@ -101,11 +107,16 @@ public class LoginMember extends JPanel implements ActionListener{
         }else if(e.getSource()==findPW) {
             new FindPW();
         }else if(e.getSource()==signB) {
-            new SignUp();
+            new SignUpMember();
+        }else if(e.getSource()==loginB) {
+            a = false;
+            new BasicFrame();
         }
         
     }
     
-    
+    public boolean getA() {
+        return a;
+    }
     
 }
