@@ -14,7 +14,11 @@ public class MemberDTO {
     String email;
     int age;
     private Sex sex; 
+    int status=0;
+    // 정상 0 , 연체자 1
     
+
+
     public MemberDTO(){
         
     }
@@ -83,7 +87,14 @@ public class MemberDTO {
     public void setSex(Sex sex) {
         this.sex = sex;
     }
+    
+    public int getStatus() {
+        return status;
+    }
 
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
 
 }
