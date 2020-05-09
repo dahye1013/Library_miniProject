@@ -1,8 +1,11 @@
 package Login;
 
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -13,7 +16,8 @@ public class LoginFrame extends JFrame{
     static LoginFrame login ;
 	public LoginManager manager;
 	public LoginMember member;
-    
+	
+
     LoginFrame(){
         super("Login");
         
@@ -23,8 +27,8 @@ public class LoginFrame extends JFrame{
         member = new LoginMember();
         
 		JTabbedPane tab = new JTabbedPane(JTabbedPane.NORTH);
-		tab.add(member, "member" );
-		tab.add(manager, "manager");	
+		tab.add(member, "일반회원" );
+		tab.add(manager, "관리자");	
 		
 		c.add(tab);
 		
@@ -33,7 +37,7 @@ public class LoginFrame extends JFrame{
 		setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         
-        
+        repaint();
         
     }
     

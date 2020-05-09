@@ -1,6 +1,8 @@
 package Login;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -25,16 +28,23 @@ public class LoginManager extends JPanel implements ActionListener {
 	private JTextField idT, pwT, verifyT;
 	private JLabel loginL, findL, verifyL;
 	private JButton loginB, findID, findPW, signupB;
-
+	public void paintComponent(Graphics g) {
+    	Dimension d = getSize();
+    	ImageIcon img = new ImageIcon("Images/login.jpg");
+        g.drawImage(img.getImage(),0,0,d.width,d.height, null);
+}
 	public LoginManager() {
 
-		loginL = new JLabel("Manager Login");
+		loginL = new JLabel("관리자 로그인");
 
 		p1 = new JPanel(new GridLayout(5, 1, 5, 10));
 		p2 = new JPanel(new GridLayout(1, 2, 5, 10));
 		p3 = new JPanel();
 		p4 = new JPanel(new GridLayout(4, 1, 5, 10));
-
+        p1.setBackground(Color.white);
+        p2.setBackground(Color.white);
+        p4.setBackground(Color.white);
+        
 		idT = new JTextField(20);
 		pwT = new JTextField(20);
 		verifyT = new JTextField(10);
@@ -49,10 +59,12 @@ public class LoginManager extends JPanel implements ActionListener {
 		loginB = new JButton("Login");
 		findID = new JButton("Find ID");
 		findPW = new JButton("Find PW");
+		signupB = new JButton("Join us");
 		findID.setBackground(Color.white);
 		findPW.setBackground(Color.white);
-		signupB = new JButton("Join us");
-
+		loginB.setBackground(Color.white);
+		signupB.setBackground(Color.white);
+		
 		idT.setText("ID");
 		pwT.setText("Password");
 

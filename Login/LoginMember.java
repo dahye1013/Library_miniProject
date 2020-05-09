@@ -1,6 +1,8 @@
 package Login;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,9 +29,13 @@ public class LoginMember extends JPanel implements ActionListener{
     private JLabel loginL, findL,  verifyL, signL;
     private JButton loginB, findID, findPW, signB;
 
-    
+	public void paintComponent(Graphics g) {
+    	Dimension d = getSize();
+    	ImageIcon img = new ImageIcon("Images/login.jpg");
+        g.drawImage(img.getImage(),0,0,d.width,d.height, null);
+}
     LoginMember() {
-        loginL = new JLabel("Member Login");
+        loginL = new JLabel("회원 로그인");
         
         
         p1 = new JPanel(new GridLayout(5, 1, 5, 10));
@@ -36,13 +43,16 @@ public class LoginMember extends JPanel implements ActionListener{
         p3 = new JPanel();
         p4 = new JPanel(new GridLayout(4, 1, 5, 10));
         
-   
+        
+        p1.setBackground(Color.white);
+        p2.setBackground(Color.white);
+        p4.setBackground(Color.white);
         
         
         idT = new JTextField(20);
         pwT = new JTextField(20);
         
-        findL = new JLabel("Did you lost ID or PW?");
+        findL = new JLabel("아이디 혹은 비밀번호를 잃어버렸나요?");
         signL = new JLabel("If you're not member");
         verifyL = new JLabel("");
         JLabel[] blankL = new JLabel[5];
@@ -54,10 +64,12 @@ public class LoginMember extends JPanel implements ActionListener{
         loginB = new JButton("Login");
         findID = new JButton("Find ID");
         findPW = new JButton("Find PW");
-        findID.setBackground(Color.white);
-        findPW.setBackground(Color.white);
         signB = new JButton("Join us");
-
+        findID.setBackground(Color.white);
+		findPW.setBackground(Color.white);
+		loginB.setBackground(Color.white);
+		signB.setBackground(Color.white);
+		
 
         idT.setText("ID");
         pwT.setText("Password");
