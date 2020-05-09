@@ -115,14 +115,24 @@ public class LoginMember extends JPanel implements ActionListener{
         }else if(e.getSource()==signB) {
             new SignUpMember();
         }else if(e.getSource()==loginB) {
+			if(idT.getText().length()==0 ||pwT.getText().length()==0 ||
+					idT.getText()==null ||pwT.getText()==null ) {
+				JOptionPane.showMessageDialog(this, "아이디와 비밀번호를 입력하세요");
+			}
+			
+			if (SignUpMember.list.size() != 0) {
+				for (int i = 0; i < SignUpMember.list.size(); i++) {
+					if (idT.getText().equals(SignUpMember.list.get(i).getId())
+							|| pwT.getText().equals(SignUpMember.list.get(i).getPassword())) {
+						JOptionPane.showMessageDialog(this, "로그인 성공");
+						new BasicFrameManager();
+					}
+				}
 
-        	for(int i = 0 ; i < SignUpMember.list.size() ; i++) {
-        		if(idT.getText().equals(SignUpMember.list.get(i).getId())
-        				||pwT.getText().equals(SignUpMember.list.get(i).getPassword())) {
-        			JOptionPane.showMessageDialog(this, "로그인 성공");
-        			new BasicFrameManager();
-        		}
-        	}
+			} else {
+				JOptionPane.showMessageDialog(this, "아이디와 비밀번호를 확인하세요");
+			}
+
         	
         	}
         }
