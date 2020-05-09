@@ -11,74 +11,72 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-public class FindID extends JFrame implements ActionListener{
-    private JFrame frame;
-    private JTextField textField;
-    private JTextField textField_1;
-    JButton findB, cancelB;
-    JLabel lblNewLabel = new JLabel("");
-    
+public class FindID extends JFrame implements ActionListener {
+	private JFrame frame;
+	private JTextField textField;
+	private JTextField textField_1;
+	JButton findB, cancelB;
+	JLabel lblNewLabel = new JLabel("");
 
-    FindID() {
-        lblNewLabel.setText("Find ID");
-        setBounds(700, 200, 300, 250);
-        getContentPane().setLayout(null);
-        setVisible(true);
-        setResizable(false);
-        
-        lblNewLabel.setFont(new Font("굴림", Font.PLAIN, 19));
-        lblNewLabel.setBounds(105, 10, 64, 21);
-        getContentPane().add(lblNewLabel);
+	FindID() {
+		lblNewLabel.setText("Find ID");
+		setBounds(700, 200, 300, 250);
+		getContentPane().setLayout(null);
+		setVisible(true);
+		setResizable(false);
 
-        JLabel lblNewLabel_1 = new JLabel("Name");
-        lblNewLabel_1.setFont(new Font("굴림", Font.PLAIN, 14));
-        lblNewLabel_1.setBounds(48, 62, 57, 15);
-        getContentPane().add(lblNewLabel_1);
+		lblNewLabel.setFont(new Font("굴림", Font.PLAIN, 19));
+		lblNewLabel.setBounds(105, 10, 64, 21);
+		getContentPane().add(lblNewLabel);
 
-        textField = new JTextField();
-        textField.setBounds(127, 60, 116, 21);
-        getContentPane().add(textField);
-        textField.setColumns(10);
+		JLabel lblNewLabel_1 = new JLabel("이름");
+		lblNewLabel_1.setFont(new Font("굴림", Font.PLAIN, 14));
+		lblNewLabel_1.setBounds(48, 62, 57, 15);
+		getContentPane().add(lblNewLabel_1);
 
-        JLabel lblEmail = new JLabel("Email");
-        lblEmail.setFont(new Font("굴림", Font.PLAIN, 14));
-        lblEmail.setBounds(48, 98, 57, 15);
-        getContentPane().add(lblEmail);
+		textField = new JTextField();
+		textField.setBounds(127, 60, 116, 21);
+		getContentPane().add(textField);
+		textField.setColumns(10);
 
-        textField_1 = new JTextField();
-        textField_1.setColumns(10);
-        textField_1.setBounds(127, 96, 116, 21);
-        getContentPane().add(textField_1);
+		JLabel lblEmail = new JLabel("이메일");
+		lblEmail.setFont(new Font("굴림", Font.PLAIN, 14));
+		lblEmail.setBounds(48, 98, 57, 15);
+		getContentPane().add(lblEmail);
 
-        findB = new JButton("Find");
-        findB.setBounds(37, 140, 97, 39);
-        getContentPane().add(findB);
+		textField_1 = new JTextField();
+		textField_1.setColumns(10);
+		textField_1.setBounds(127, 96, 116, 21);
+		getContentPane().add(textField_1);
 
-        cancelB = new JButton("Cancel");
-        cancelB.setBounds(146, 140, 97, 39);
-        getContentPane().add(cancelB);
-        
-        findB.addActionListener(this);
-        cancelB.addActionListener(this);
-        
-        this.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                setVisible(false);
-            }
-        });
-        
-    }
-    
+		findB = new JButton("찾기");
+		findB.setBounds(37, 140, 97, 39);
+		getContentPane().add(findB);
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if(e.getSource()==findB) {
-            
-        }else if(e.getSource()==cancelB) {
-            System.out.println("dddd");
-            setVisible(false);
-        }
-        
-    }
+		cancelB = new JButton("취소");
+		cancelB.setBounds(146, 140, 97, 39);
+		getContentPane().add(cancelB);
+
+		findB.addActionListener(this);
+		cancelB.addActionListener(this);
+
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				setVisible(false);
+			}
+		});
+
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == findB) {
+
+		} else if (e.getSource() == cancelB) {
+			dispose();
+		}
+
+	}
+	
 }

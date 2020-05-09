@@ -29,7 +29,7 @@ public class FindPW extends JFrame implements ActionListener{
         lblNewLabel.setBounds(105, 10, 64, 21);
         getContentPane().add(lblNewLabel);
 
-        JLabel lblNewLabel_1 = new JLabel("Name");
+        JLabel lblNewLabel_1 = new JLabel("이름");
         lblNewLabel_1.setFont(new Font("굴림", Font.PLAIN, 14));
         lblNewLabel_1.setBounds(48, 62, 57, 15);
         getContentPane().add(lblNewLabel_1);
@@ -39,7 +39,7 @@ public class FindPW extends JFrame implements ActionListener{
         getContentPane().add(textField);
         textField.setColumns(10);
 
-        JLabel lblEmail = new JLabel("Email");
+        JLabel lblEmail = new JLabel("이메일");
         lblEmail.setFont(new Font("굴림", Font.PLAIN, 14));
         lblEmail.setBounds(48, 98, 57, 15);
         getContentPane().add(lblEmail);
@@ -49,11 +49,11 @@ public class FindPW extends JFrame implements ActionListener{
         textField_1.setBounds(127, 96, 116, 21);
         getContentPane().add(textField_1);
 
-        JButton findB = new JButton("Find");
+        JButton findB = new JButton("찾기");
         findB.setBounds(37, 140, 97, 39);
         getContentPane().add(findB);
 
-        JButton canelB = new JButton("Cancel");
+        JButton canelB = new JButton("취소");
         canelB.setBounds(146, 140, 97, 39);
         getContentPane().add(canelB);
         
@@ -74,7 +74,7 @@ public class FindPW extends JFrame implements ActionListener{
         if(e.getSource()==findB) {
             
         }else if(e.getSource()==cancelB) {
-            this.setVisible(false);
+        	dispose();
         }
         
     }

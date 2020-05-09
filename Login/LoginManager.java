@@ -25,13 +25,7 @@ public class LoginManager extends JPanel implements ActionListener {
     private JTextField idT, pwT, verifyT;
     private JLabel loginL, findL, verifyL;
     private JButton loginB, findID, findPW, signupB;
-    private List<ManagerDTO> list = new ArrayList<ManagerDTO>();
 
-    LoginManager(List<ManagerDTO> list) {
-        this.list = list;
-        System.out.println(this.list.get(0).getName());
-        
-    }
 
     public LoginManager() {
 
@@ -46,8 +40,8 @@ public class LoginManager extends JPanel implements ActionListener {
         pwT = new JTextField(20);
         verifyT = new JTextField(10);
 
-        findL = new JLabel("Did you lost ID or PW?");
-        verifyL = new JLabel("Enter verify number");
+        findL = new JLabel("아이디 혹은 비밀번호를 잃어버렸나요?");
+        verifyL = new JLabel("인증번호를 입력하세요");
         JLabel[] blankL = new JLabel[5];
         for (int i = 0; i < blankL.length; i++) {
             blankL[i] = new JLabel("");
@@ -115,16 +109,17 @@ public class LoginManager extends JPanel implements ActionListener {
             }
             new SignUpManager();
         } else if (e.getSource() == loginB) {
-            String name = ManagerDTO.getList().get(0).getName(); //이거임!!!! 이걸로 다른것도 해결할것
-            String nickName =ManagerDTO.getList().get(0).getNickName();
+        	if(SignUpManager.list.size() != 0) {
+        	for(int i = 0 ; i < SignUpManager.list.size() ; i++) {
+        		if(idT.getText().equals(SignUpManager.list.get(i).getId())
+        				||pwT.getText().equals(SignUpManager.list.get(i).getPassword())) {
+        			JOptionPane.showMessageDialog(this, "로그인 성공");
+        			new BasicFrameManager();
+        		}
+        	}
+        	
+        	}
             
-            System.out.println(ManagerDTO.getList().get(0).getName());
-            System.out.println(name);
-            
-            
-//            System.out.println(this.list.get(0).getName());
-            this.setVisible(false);
-            new BasicFrameManager();
 
         }
 

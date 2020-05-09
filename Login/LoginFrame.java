@@ -24,7 +24,7 @@ public class LoginFrame extends JFrame{
         
 		JTabbedPane tab = new JTabbedPane(JTabbedPane.NORTH);
 		tab.add(member, "member" );
-		tab.add(manager, "manager");
+		tab.add(manager, "manager");	
 		
 		c.add(tab);
 		
