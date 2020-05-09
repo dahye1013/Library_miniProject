@@ -10,7 +10,7 @@ import javax.swing.JTabbedPane;
 public class BasicFrameMember extends JFrame {
     public BookManagement p1;
     public LendBookManage p2;
-    public Panel03 p3;
+    public BookReport p3;
     
     public BasicFrameMember() {
         super("Library");
@@ -20,12 +20,12 @@ public class BasicFrameMember extends JFrame {
 
         p1 = new BookManagement();
         p2 = new LendBookManage();
-        p3 = new Panel03();
+        p3 = new BookReport();
          
         JTabbedPane tab = new JTabbedPane();
         tab.add(p1,"BookManage");
         tab.add(p2,"LendManage");
-        tab.add(p3,"p3");
+        tab.add(p3,"BookReport");
         
         add(tab);
         
