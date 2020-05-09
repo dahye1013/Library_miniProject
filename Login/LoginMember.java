@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,7 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import ManagerFrame.BasicFrame;
+import ManagerFrame.BasicFrameMember;
 
 public class LoginMember extends JPanel implements ActionListener{
     public JPanel bigP, p1, p2, p3, p4;
@@ -21,9 +23,15 @@ public class LoginMember extends JPanel implements ActionListener{
     private JTextField idT, pwT ;
     private JLabel loginL, findL,  verifyL, signL;
     private JButton loginB, findID, findPW, signB;
-    boolean a=true;
+    private List<MemberDTO> list = new ArrayList<MemberDTO>();
+
+    LoginMember(List<MemberDTO> list) {
+       this.list = list;
+    }
+    
     LoginMember() {
         loginL = new JLabel("Member Login");
+        
         
         p1 = new JPanel(new GridLayout(5, 1, 5, 10));
         p2 = new JPanel(new GridLayout(1, 2, 5, 10));
@@ -109,14 +117,13 @@ public class LoginMember extends JPanel implements ActionListener{
         }else if(e.getSource()==signB) {
             new SignUpMember();
         }else if(e.getSource()==loginB) {
-            a = false;
-            new BasicFrame();
+            
+           
+            
+           new BasicFrameMember();
         }
         
     }
-    
-    public boolean getA() {
-        return a;
-    }
+   
     
 }

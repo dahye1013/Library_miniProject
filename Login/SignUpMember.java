@@ -162,8 +162,12 @@ public class SignUpMember extends JFrame implements ActionListener {
                 memberDTO.setSex(Sex.FEMALE);
             }
             list.add(memberDTO);
+            new MemberDTO(list);
+            new LoginMember(list);
+            
             
             JOptionPane.showMessageDialog(this, "아이디가 생성되었습니다.");
+            dispose();
             
             
         }

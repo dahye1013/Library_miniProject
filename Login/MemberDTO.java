@@ -1,38 +1,42 @@
 package Login;
 
-enum Sex{
+import java.util.ArrayList;
+import java.util.List;
+
+enum Sex {
     MALE, FEMALE
 }
 
-
 public class MemberDTO {
-    
+
     String name;
     String password;
     String nickName;
     String birth;
     String email;
     int age;
-    private Sex sex; 
-    int status=0;
+    private Sex sex;
+    int status = 0;
     // 정상 0 , 연체자 1
     
-
-
-    public MemberDTO(){
+    private static List<MemberDTO> list = new ArrayList<MemberDTO>();
+    MemberDTO(){
         
     }
 
-    MemberDTO(String name, String password, String nickName, String birth, String email){
+    public MemberDTO(List<MemberDTO> list) {
+        this.list = list;
+    }
+
+    MemberDTO(String name, String password, String nickName, String birth, String email) {
         this.name = name;
         this.email = email;
         this.birth = birth;
         this.password = password;
         this.nickName = nickName;
-     
+
     }
-    
-    
+
     public String getName() {
         return name;
     }
@@ -72,6 +76,7 @@ public class MemberDTO {
     public void setEmail(String email) {
         this.email = email;
     }
+
     public int getAge() {
         return age;
     }
@@ -87,13 +92,21 @@ public class MemberDTO {
     public void setSex(Sex sex) {
         this.sex = sex;
     }
-    
+
     public int getStatus() {
         return status;
     }
 
     public void setStatus(int status) {
         this.status = status;
+    }
+    
+    public static List<MemberDTO> getList() {
+        return list;
+    }
+
+    public void setList(List<MemberDTO> list) {
+        this.list = list;
     }
 
 

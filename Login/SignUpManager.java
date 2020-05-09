@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -24,7 +25,7 @@ public class SignUpManager extends JFrame implements ActionListener {
     private JTextField emailT;
     JRadioButton maleB ,femaleB;
     private JButton joinB;
-    private ArrayList<MemberDTO> list = new ArrayList<MemberDTO>();
+    private List<ManagerDTO> list = new ArrayList<ManagerDTO>();
 
 
     SignUpManager() {
@@ -154,17 +155,20 @@ public class SignUpManager extends JFrame implements ActionListener {
             String birth = birthT.getText();
             String email = emailT.getText();
             
-            MemberDTO memberDTO = new  MemberDTO( name,  password,  nickName,  birth,  email);
+            ManagerDTO managerDTO = new  ManagerDTO( name,  password,  nickName,  birth,  email);
             
             if(maleB.isSelected()) {
-                memberDTO.setSex(Sex.MALE);
+                managerDTO.setSex(Sex.MALE);
             }else if(maleB.isSelected()) {
-                memberDTO.setSex(Sex.FEMALE);
+                managerDTO.setSex(Sex.FEMALE);
             }
-            list.add(memberDTO);
+            list.add(managerDTO);
+            
+            new ManagerDTO(list);
+            new LoginManager(list);
             
             JOptionPane.showMessageDialog(this, "아이디가 생성되었습니다.");
-            
+            dispose();
             
         }
     }

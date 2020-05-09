@@ -1,5 +1,8 @@
 package Login;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ManagerDTO {
     String name;
     String password;
@@ -8,8 +11,19 @@ public class ManagerDTO {
     String email;
     int age;
     private Sex sex;  
+    private static List<ManagerDTO> list = new ArrayList<ManagerDTO>();
     
+    ManagerDTO(){
+        
+    }
+    public ManagerDTO(List<ManagerDTO> list){
+         this.list = list;
+    }
+    
+
+
     public ManagerDTO(String name, String password, String nickName, String birth, String email) {
+        list = null;
         this.name = name;
         this.age = age;
         this.email = email;
@@ -57,4 +71,17 @@ public class ManagerDTO {
     public void setSex(Sex sex) {
         this.sex = sex;
     }
+    
+    public static List<ManagerDTO> getList() {
+        return list;
+    }
+
+    public void setList(List<ManagerDTO> list) {
+        this.list = list;
+    }
+    
+    
+    
+   
+    
 }

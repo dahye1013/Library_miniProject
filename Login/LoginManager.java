@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -14,23 +16,32 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import ManagerFrame.BasicFrame;
+import ManagerFrame.BasicFrameMember;
+import MemberFrame.BasicFrameManager;
 
-public class LoginManager extends JPanel implements ActionListener{
+public class LoginManager extends JPanel implements ActionListener {
     public JPanel bigP, p1, p2, p3, p4;
     private JFrame findF1, findF2;
-    private JTextField idT, pwT , verifyT;
-    private JLabel loginL, findL,  verifyL;
+    private JTextField idT, pwT, verifyT;
+    private JLabel loginL, findL, verifyL;
     private JButton loginB, findID, findPW, signupB;
-    
-    LoginManager() {
-        loginL = new JLabel("Manager Login");
+    private List<ManagerDTO> list = new ArrayList<ManagerDTO>();
+
+    LoginManager(List<ManagerDTO> list) {
+        this.list = list;
+        System.out.println(this.list.get(0).getName());
         
+    }
+
+    public LoginManager() {
+
+        loginL = new JLabel("Manager Login");
+
         p1 = new JPanel(new GridLayout(5, 1, 5, 10));
         p2 = new JPanel(new GridLayout(1, 2, 5, 10));
         p3 = new JPanel();
         p4 = new JPanel(new GridLayout(4, 1, 5, 10));
-        
+
         idT = new JTextField(20);
         pwT = new JTextField(20);
         verifyT = new JTextField(10);
@@ -38,17 +49,16 @@ public class LoginManager extends JPanel implements ActionListener{
         findL = new JLabel("Did you lost ID or PW?");
         verifyL = new JLabel("Enter verify number");
         JLabel[] blankL = new JLabel[5];
-        for(int i = 0 ; i < blankL.length ; i++) {
+        for (int i = 0; i < blankL.length; i++) {
             blankL[i] = new JLabel("");
         }
-        
+
         loginB = new JButton("Login");
         findID = new JButton("Find ID");
         findPW = new JButton("Find PW");
         findID.setBackground(Color.white);
         findPW.setBackground(Color.white);
         signupB = new JButton("Join us");
-
 
         idT.setText("ID");
         pwT.setText("Password");
@@ -61,14 +71,14 @@ public class LoginManager extends JPanel implements ActionListener{
 
         p2.add(findID);
         p2.add(findPW);
-        
+
         p3.setLayout(null);
-        
+
         p4.add(blankL[1]);
         p4.add(verifyL);
         p4.add(verifyT);
         p4.add(signupB);
-        
+
         add(p1);
         add(p2);
         add(p3);
@@ -84,36 +94,40 @@ public class LoginManager extends JPanel implements ActionListener{
                 pwT.setText("");
             }
         });
-        
+
         findID.addActionListener(this);
         findPW.addActionListener(this);
         signupB.addActionListener(this);
         loginB.addActionListener(this);
-        
+
     }
- 
+
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource()==findID) {
+        if (e.getSource() == findID) {
             new FindID();
-        }else if(e.getSource()==findPW) {
+        } else if (e.getSource() == findPW) {
             new FindPW();
-        }else if(e.getSource()==signupB) {
-           if( !verifyT.getText().equals("1234")) {
-               JOptionPane.showMessageDialog(this, "올바른 인증번호를 기입하십시오.");
-               return;
-           }
+        } else if (e.getSource() == signupB) {
+            if (!verifyT.getText().equals("1234")) {
+                JOptionPane.showMessageDialog(this, "올바른 인증번호를 기입하십시오.");
+                return;
+            }
             new SignUpManager();
-        }else if(e.getSource()==loginB) {
-            this.setVisible(false);
-            new BasicFrame();
+        } else if (e.getSource() == loginB) {
+            String name = ManagerDTO.getList().get(0).getName(); //이거임!!!! 이걸로 다른것도 해결할것
+            String nickName =ManagerDTO.getList().get(0).getNickName();
             
+            System.out.println(ManagerDTO.getList().get(0).getName());
+            System.out.println(name);
+            
+            
+//            System.out.println(this.list.get(0).getName());
+            this.setVisible(false);
+            new BasicFrameManager();
+
         }
-        
-        
+
     }
-    
-    
-    
-    
+
 }
