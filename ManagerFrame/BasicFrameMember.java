@@ -11,6 +11,8 @@ public class BasicFrameMember extends JFrame {
     public BookManagement p1;
     public LendBookManage p2;
     public BookReport p3;
+    public BlackList p4;
+    
     
     public BasicFrameMember() {
         super("Library");
@@ -21,11 +23,14 @@ public class BasicFrameMember extends JFrame {
         p1 = new BookManagement();
         p2 = new LendBookManage();
         p3 = new BookReport();
+        p4 = new BlackList();
          
         JTabbedPane tab = new JTabbedPane();
         tab.add(p1,"BookManage");
         tab.add(p2,"LendManage");
         tab.add(p3,"BookReport");
+        tab.add(p4,"BlackList");
+        
         
         add(tab);
         
