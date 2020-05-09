@@ -10,10 +10,8 @@ import javax.swing.JTabbedPane;
 
 public class BasicFrameManager extends JFrame {
     public BookSearch p1;
-    public Panel02 p2;
-    public Panel03 p3;
-    Panel p4;
-    Panel p5;
+    public SeatSelect p2;
+    public MyPage p3;
     
     public BasicFrameManager() {
         super("Library");
@@ -22,14 +20,14 @@ public class BasicFrameManager extends JFrame {
         JTabbedPane t = new JTabbedPane(); // JTabbedPane생성
 
         p1 = new BookSearch();
-        p2 = new Panel02();
-        p3 = new Panel03();
+        p2 = new SeatSelect();
+        p3 = new MyPage();
         
         
         JTabbedPane tab = new JTabbedPane();
-        tab.add(p1,"BookManage");
-        tab.add(p2,"p2");
-        tab.add(p3,"p3");
+        tab.add(p1,"BookSearch");
+        tab.add(p2,"MyPage");
+        tab.add(p3,"SeatSelect");
         
         add(tab);
         
