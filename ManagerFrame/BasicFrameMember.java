@@ -12,7 +12,8 @@ public class BasicFrameMember extends JFrame {
     public LendBookManage p2;
     public BookReport p3;
     public BlackList p4;
-    
+    public ManagerManagement p5;
+    public MemberManagement p6;
     
     public BasicFrameMember() {
         super("Library");
@@ -24,13 +25,16 @@ public class BasicFrameMember extends JFrame {
         p2 = new LendBookManage();
         p3 = new BookReport();
         p4 = new BlackList();
-         
+        p5 = new ManagerManagement();
+        p6 = new MemberManagement();
+
         JTabbedPane tab = new JTabbedPane();
-        tab.add(p1,"BookManage");
-        tab.add(p2,"LendManage");
-        tab.add(p3,"BookReport");
-        tab.add(p4,"BlackList");
-        
+        tab.add(p1,"도서관리");
+        tab.add(p2,"대여관리");
+        tab.add(p3,"도서현황");
+        tab.add(p4,"연체자");
+        tab.add(p5,"관리자관리");
+        tab.add(p6,"회원관리");
         
         add(tab);
         
