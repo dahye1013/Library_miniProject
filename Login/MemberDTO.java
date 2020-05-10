@@ -36,7 +36,7 @@ public class MemberDTO {
     public void calcAge() {
     	birth = this.birth.substring(0, 3);
     	int year = cal.get(Calendar.YEAR);
-    	this.age = (year-Integer.parseInt(birth));
+    	this.age = year-Integer.parseInt(birth);
     }
 	public String getId() {
 		return id;

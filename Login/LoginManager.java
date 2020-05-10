@@ -28,23 +28,24 @@ public class LoginManager extends JPanel implements ActionListener {
 	private JTextField idT, pwT, verifyT;
 	private JLabel loginL, findL, verifyL;
 	private JButton loginB, findID, findPW, signupB;
-	public void paintComponent(Graphics g) {
-    	Dimension d = getSize();
-    	ImageIcon img = new ImageIcon("Images/login.jpg");
-        g.drawImage(img.getImage(),0,0,d.width,d.height, null);
-}
-	public LoginManager() {
 
+	public void paintComponent(Graphics g) {
+		Dimension d = getSize();
+		ImageIcon img = new ImageIcon("Images/login.jpg");
+		g.drawImage(img.getImage(), 0, 0, d.width, d.height, null);
+	}
+
+	public LoginManager() {
 		loginL = new JLabel("관리자 로그인");
 
 		p1 = new JPanel(new GridLayout(5, 1, 5, 10));
 		p2 = new JPanel(new GridLayout(1, 2, 5, 10));
 		p3 = new JPanel();
 		p4 = new JPanel(new GridLayout(4, 1, 5, 10));
-        p1.setBackground(Color.white);
-        p2.setBackground(Color.white);
-        p4.setBackground(Color.white);
-        
+		p1.setBackground(Color.white);
+		p2.setBackground(Color.white);
+		p4.setBackground(Color.white);
+
 		idT = new JTextField(20);
 		pwT = new JTextField(20);
 		verifyT = new JTextField(10);
@@ -64,7 +65,7 @@ public class LoginManager extends JPanel implements ActionListener {
 		findPW.setBackground(Color.white);
 		loginB.setBackground(Color.white);
 		signupB.setBackground(Color.white);
-		
+
 		idT.setText("ID");
 		pwT.setText("Password");
 
@@ -120,11 +121,7 @@ public class LoginManager extends JPanel implements ActionListener {
 			}
 			new SignUpManager();
 		} else if (e.getSource() == loginB) {
-			if(idT.getText().length()==0 ||pwT.getText().length()==0 ||
-					idT.getText()==null ||pwT.getText()==null ) {
-				JOptionPane.showMessageDialog(this, "아이디와 비밀번호를 입력하세요");
-			}
-			
+
 			if (SignUpManager.list.size() != 0) {
 				for (int i = 0; i < SignUpManager.list.size(); i++) {
 					if (idT.getText().equals(SignUpManager.list.get(i).getId())
