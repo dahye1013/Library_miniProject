@@ -10,6 +10,7 @@ public class ManagerDTO {
 	String birth;
 	String email;
 	int age;
+	String status;// 역할?
 	private Sex sex;
 
 	ManagerDTO(String id, String password, String nickName, String birth, String email, Sex sex) {

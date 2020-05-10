@@ -19,8 +19,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import ManagerFrame.BasicFrameMember;
-import MemberFrame.BasicFrameManager;
+import ManagerFrame.BasicFrameManager;
+import MemberFrame.BasicFrameMember;
 
 public class LoginMember extends JPanel implements ActionListener {
 	public JPanel bigP, p1, p2, p3, p4;
