@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -26,29 +29,30 @@ import javax.swing.JTextField;
 public class SignUpMember extends JFrame implements ActionListener {
 
 	private JTextField idT;
-	private JTextField pwT;
+	private JPasswordField pwT;
 	private JTextField nameT;
 	private JTextField birthT;
 	private JTextField emailT;
-	private JRadioButton maleB, femaleB;
-	private JButton joinB;
+	JRadioButton maleB, femaleB;
+	private JButton joinB, btnNewButton;
 	public static List<MemberDTO> list = new ArrayList<MemberDTO>();
-	 ImageIcon icon;
-	 JScrollPane scrollPane;
+	private boolean pwdCheck = false; // 추가, 비밀번호조건여부
+	private boolean idCheck = false; // 추가, 아이디 중복체크 여부
+	private String pwd;
+
 	SignUpMember() {
-		
+
 		super("member Join");
-		 JPanel panel = new JPanel() {
-			 public void paintComponent(Graphics g) {
+		JPanel panel = new JPanel() {
+			public void paintComponent(Graphics g) {
 				Dimension d = getSize();
 				ImageIcon img = new ImageIcon("Images/signUp.png");
 				g.drawImage(img.getImage(), 0, 0, d.width, d.height, null);
 			}
-		 };
+		};
 		setBounds(700, 100, 290, 401);
-
 		panel.setLayout(null);
-		
+
 		JLabel signupL = new JLabel("회원가입");
 		signupL.setFont(new Font("문체부 쓰기 흘림체", Font.BOLD, 20));
 		signupL.setBounds(96, 10, 98, 28);
@@ -67,7 +71,7 @@ public class SignUpMember extends JFrame implements ActionListener {
 		lblPassword.setBounds(42, 86, 57, 15);
 		panel.add(lblPassword);
 
-		pwT = new JTextField("8자리이상");
+		pwT = new JPasswordField("영문혼합8자리이상");
 		pwT.setColumns(10);
 		pwT.setBounds(130, 83, 116, 21);
 		panel.add(pwT);
@@ -86,14 +90,14 @@ public class SignUpMember extends JFrame implements ActionListener {
 		group.add(maleB);
 		group.add(femaleB);
 
-		nameT = new JTextField("닉네임을 설정하세요");
+		nameT = new JTextField("이름을 입력하세요.");
 		nameT.setColumns(10);
 		nameT.setBounds(130, 191, 116, 21);
 		panel.add(nameT);
 
-		JLabel lblNicknamel = new JLabel("닉네임");
-		lblNicknamel.setBounds(42, 194, 76, 15);
-		panel.add(lblNicknamel);
+		JLabel lblNamel = new JLabel("이름");
+		lblNamel.setBounds(42, 194, 76, 15);
+		panel.add(lblNamel);
 
 		birthT = new JTextField("생년월일 8자리");
 		birthT.setColumns(10);
@@ -113,34 +117,65 @@ public class SignUpMember extends JFrame implements ActionListener {
 		lblEmail.setBounds(42, 256, 57, 15);
 		panel.add(lblEmail);
 
-		JButton btnNewButton = new JButton("check");
+		btnNewButton = new JButton("check");
 		btnNewButton.setFont(new Font("굴림", Font.PLAIN, 7));
 		btnNewButton.setBounds(64, 49, 54, 23);
 		panel.add(btnNewButton);
-		
-		
+
 		joinB = new JButton("confirm");
 		joinB.setBackground(Color.white);
 		joinB.setBounds(42, 305, 204, 37);
 		panel.add(joinB);
-        setContentPane(panel);
+		setContentPane(panel);
 		setVisible(true);
 		setResizable(false);
 
 		// ---------이벤트--------------------
 
 		joinB.addActionListener(this);
+		btnNewButton.addActionListener(this);
 
 		idT.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
+				idCheck = false;
 				idT.setText("");
 			}
 		});
 		pwT.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				pwT.setText("");
+				pwT.setEchoChar('●'); // 추가
+
 			}
 		});
+		pwT.addKeyListener(new KeyAdapter() { // 추가
+			@Override
+			public void keyReleased(KeyEvent e) {
+				pwd = "";
+				boolean english = false;
+				boolean number = false;
+				char[] secret_pwd = pwT.getPassword();
+
+				for (int i = 0; i < secret_pwd.length; i++) {
+					int tempPwd = (int) secret_pwd[i];
+					if ((tempPwd > 64 && tempPwd < 91) || (tempPwd > 96 && tempPwd < 123)) {
+						english = true;
+					} else if (tempPwd > 47 && tempPwd < 58) {
+						number = true;
+					}
+					pwd += secret_pwd[i];
+
+				}
+
+				if (secret_pwd.length >= 8 && english == true && number == true) {
+					pwT.setForeground(Color.blue);
+					pwdCheck = true;
+				} else {
+					pwT.setForeground(Color.red);
+				}
+			}
+		});
+
 		nameT.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				nameT.setText("");
@@ -166,7 +201,7 @@ public class SignUpMember extends JFrame implements ActionListener {
 		if (e.getSource() == joinB) {
 
 			String id = idT.getText();
-			String password = pwT.getText();
+			// String password = pwT.getText();
 			String name = nameT.getText();
 			String birth = birthT.getText();
 			String email = emailT.getText();
@@ -174,13 +209,24 @@ public class SignUpMember extends JFrame implements ActionListener {
 			if (femaleB.isSelected()) {
 				sex = "여성";
 			}
-			MemberDTO memberDTO = new MemberDTO(id, password, name, birth, email, sex);
+			MemberDTO memberDTO = new MemberDTO(id, pwd, name, birth, email, sex);
 			list.add(memberDTO);
 
 			JOptionPane.showMessageDialog(this, "아이디가 생성되었습니다.");
 			dispose();
 
+		} else if (e.getSource() == btnNewButton) {
+			String id = idT.getText();
+			for (int i = 0; i < list.size(); i++) {
+				if (!(id.equals(list.get(i).getId()))) {
+					JOptionPane.showMessageDialog(this, "사용가능한 아이디입니다.");
+					idCheck = true;
+				} else {
+					JOptionPane.showMessageDialog(this, "존재하는 아이디입니다.");
+				}
+			}
 		}
+
 	}
 
 }

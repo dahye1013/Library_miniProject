@@ -17,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import ManagerFrame.BasicFrameManager;
@@ -25,9 +26,11 @@ import MemberFrame.BasicFrameMember;
 public class LoginMember extends JPanel implements ActionListener {
 	public JPanel bigP, p1, p2, p3, p4;
 	private JFrame findF1, findF2;
-	private JTextField idT, pwT;
+	private JTextField idT;	//수정
+	private JPasswordField pwT; //수정
 	private JLabel loginL, findL, verifyL, signL;
 	private JButton loginB, findID, findPW, signB;
+
 
 	public void paintComponent(Graphics g) {
 		Dimension d = getSize();
@@ -48,7 +51,7 @@ public class LoginMember extends JPanel implements ActionListener {
 		p4.setBackground(Color.white);
 
 		idT = new JTextField(20);
-		pwT = new JTextField(20);
+		pwT = new JPasswordField(20);//수정
 
 		findL = new JLabel("아이디 혹은 비밀번호를 잃어버렸나요?");
 		signL = new JLabel("If you're not member");
@@ -99,6 +102,7 @@ public class LoginMember extends JPanel implements ActionListener {
 		pwT.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				pwT.setText("");
+				pwT.setEchoChar('●'); //수정
 			}
 		});
 
@@ -121,11 +125,15 @@ public class LoginMember extends JPanel implements ActionListener {
 		} else if (e.getSource() == signB) {
 			new SignUpMember();
 		} else if (e.getSource() == loginB) {
-
+			String password ="";
+        	char[] pwd = pwT.getPassword();
+        	for(int i=0; i<pwd.length; i++) {
+        		password += pwd[i];
+        	}
 			if (SignUpMember.list.size() != 0) {
 				for (int i = 0; i < SignUpMember.list.size(); i++) {
 					if (idT.getText().equals(SignUpMember.list.get(i).getId())
-							|| pwT.getText().equals(SignUpMember.list.get(i).getPassword())) {
+							|| password.equals(SignUpMember.list.get(i).getPassword())) {
 						JOptionPane.showMessageDialog(this, "로그인 성공");
 						new BasicFrameManager();
 					}

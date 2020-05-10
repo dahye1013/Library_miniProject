@@ -17,28 +17,32 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import ManagerFrame.BasicFrameManager;
 import MemberFrame.BasicFrameMember;
 
 public class LoginManager extends JPanel implements ActionListener {
+	
 	public JPanel bigP, p1, p2, p3, p4;
-	private JFrame findF1, findF2;
-	private JTextField idT, pwT, verifyT;
-	private JLabel loginL, findL, verifyL;
-	private JButton loginB, findID, findPW, signupB;
+    private JFrame findF1, findF2;
+    private JTextField idT, verifyT;//수정
+    private JPasswordField pwT;//수정
+    private JLabel loginL, findL, verifyL;
+    private JButton loginB, findID, findPW, signupB;
 
-	public void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g) {
 		Dimension d = getSize();
 		ImageIcon img = new ImageIcon("Images/login.jpg");
 		g.drawImage(img.getImage(), 0, 0, d.width, d.height, null);
 	}
 
-	public LoginManager() {
-		loginL = new JLabel("관리자 로그인");
+    public LoginManager() {
 
-		p1 = new JPanel(new GridLayout(5, 1, 5, 10));
+    	loginL = new JLabel("관리자 로그인");
+    	
+    	p1 = new JPanel(new GridLayout(5, 1, 5, 10));
 		p2 = new JPanel(new GridLayout(1, 2, 5, 10));
 		p3 = new JPanel();
 		p4 = new JPanel(new GridLayout(4, 1, 5, 10));
@@ -46,11 +50,11 @@ public class LoginManager extends JPanel implements ActionListener {
 		p2.setBackground(Color.white);
 		p4.setBackground(Color.white);
 
-		idT = new JTextField(20);
-		pwT = new JTextField(20);
-		verifyT = new JTextField(10);
+        idT = new JTextField(20);
+        pwT = new JPasswordField(20);//수정
+        verifyT = new JTextField(10);
 
-		findL = new JLabel("아이디 혹은 비밀번호를 잃어버렸나요?");
+        findL = new JLabel("아이디 혹은 비밀번호를 잃어버렸나요?");
 		verifyL = new JLabel("인증번호를 입력하세요");
 		JLabel[] blankL = new JLabel[5];
 		for (int i = 0; i < blankL.length; i++) {
@@ -66,66 +70,72 @@ public class LoginManager extends JPanel implements ActionListener {
 		loginB.setBackground(Color.white);
 		signupB.setBackground(Color.white);
 
-		idT.setText("ID");
-		pwT.setText("Password");
+        idT.setText("ID");
+        pwT.setText("PassWord");
+        pwT.setEchoChar((char)0);//수정
+        p1.add(loginL);
+        p1.add(idT);
+        p1.add(pwT);
+        p1.add(loginB);
+        p1.add(findL);
 
-		p1.add(loginL);
-		p1.add(idT);
-		p1.add(pwT);
-		p1.add(loginB);
-		p1.add(findL);
+        p2.add(findID);
+        p2.add(findPW);
 
-		p2.add(findID);
-		p2.add(findPW);
+        p3.setLayout(null);
 
-		p3.setLayout(null);
+        p4.add(blankL[1]);
+        p4.add(verifyL);
+        p4.add(verifyT);
+        p4.add(signupB);
 
-		p4.add(blankL[1]);
-		p4.add(verifyL);
-		p4.add(verifyT);
-		p4.add(signupB);
+        add(p1);
+        add(p2);
+        add(p3);
+        add(p4);
 
-		add(p1);
-		add(p2);
-		add(p3);
-		add(p4);
+        idT.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                idT.setText("");
+            }
+        });
+        pwT.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                pwT.setText("");
+                pwT.setEchoChar('●');
+            }
+        });
 
-		idT.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				idT.setText("");
-			}
-		});
-		pwT.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				pwT.setText("");
-			}
-		});
+        findID.addActionListener(this);
+        findPW.addActionListener(this);
+        signupB.addActionListener(this);
+        loginB.addActionListener(this);
 
-		findID.addActionListener(this);
-		findPW.addActionListener(this);
-		signupB.addActionListener(this);
-		loginB.addActionListener(this);
+    }
 
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == findID) {
-			new FindID();
-		} else if (e.getSource() == findPW) {
-			new FindPW();
-		} else if (e.getSource() == signupB) {
-			if (!verifyT.getText().equals("1234")) {
-				JOptionPane.showMessageDialog(this, "올바른 인증번호를 기입하세요.");
-				return;
-			}
-			new SignUpManager();
-		} else if (e.getSource() == loginB) {
-
-			if (SignUpManager.list.size() != 0) {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == findID) {
+            new FindID();
+        } else if (e.getSource() == findPW) {
+            new FindPW();
+        } else if (e.getSource() == signupB) {
+            if (!verifyT.getText().equals("1234")) {
+                JOptionPane.showMessageDialog(this, "올바른 인증번호를 기입하십시오.");
+                return;
+            }
+            new SignUpManager();
+        } else if (e.getSource() == loginB) {
+        	String password ="";
+        	char[] pwd = pwT.getPassword();
+        	for(int i=0; i<pwd.length; i++) {
+        		password += pwd[i];
+        	}
+        	
+        	if (SignUpManager.list.size() != 0) {
 				for (int i = 0; i < SignUpManager.list.size(); i++) {
 					if (idT.getText().equals(SignUpManager.list.get(i).getId())
-							|| pwT.getText().equals(SignUpManager.list.get(i).getPassword())) {
+							|| password.equals(SignUpManager.list.get(i).getPassword())) {
 						JOptionPane.showMessageDialog(this, "로그인 성공");
 						new BasicFrameManager();
 					}
@@ -135,8 +145,8 @@ public class LoginManager extends JPanel implements ActionListener {
 				JOptionPane.showMessageDialog(this, "아이디와 비밀번호를 확인하세요");
 			}
 
-		}
+        }
 
-	}
+    }
 
 }
