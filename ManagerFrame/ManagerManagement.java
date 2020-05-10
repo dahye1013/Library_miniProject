@@ -18,6 +18,9 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 
+import Login.MemberDTO;
+import Login.SignUpMember;
+
 public class ManagerManagement extends JPanel implements ActionListener{
 	
     private JButton searchBtn, inquiryBtn, withdrawBtn;
@@ -53,15 +56,25 @@ public class ManagerManagement extends JPanel implements ActionListener{
         //Table 생성
         Vector<String> v = new Vector<String>();
         v.add("ID");
-        v.add("이름");
         v.add("닉네임");
         v.add("생년월일");
         v.add("나이");
         v.add("email");
         v.add("성별");
-        v.add("연체 여부");
         model = new DefaultTableModel(v,0);
         table = new JTable(model);
+        
+//        model.setRowCount(0); 
+        for(MemberDTO dto : SignUpMember.list) {
+            Vector<String> v1 = new Vector<String>();
+            v1.add(dto.getId());
+            v1.add(dto.getNickName());
+            v1.add(dto.getBirth());
+            v1.add(dto.getAge()+"");
+            v1.add(dto.getEmail());
+            v1.add(dto.getSex()+"");
+            model.addRow(v1);
+        }
         
         //JScrollPanedp table 추가
         JScrollPane scroll = new JScrollPane(table);

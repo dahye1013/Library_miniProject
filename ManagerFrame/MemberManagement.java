@@ -123,4 +123,5 @@ public class MemberManagement extends JPanel implements ActionListener{
         	// 회원리스트 삭제
         }
     }//actionPerformed()
+
 }
