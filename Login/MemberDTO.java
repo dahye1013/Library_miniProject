@@ -4,19 +4,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-enum Sex {
-    MALE, FEMALE
-}
+
 
 public class MemberDTO {
 
     String id;
     String password;
-    String nickName;
+    String name;
     String birth;
     String email;
     int age;
-    Sex sex;
+    String sex;
     int status = 0;
     // 정상 0 , 연체자 1
     Calendar cal = Calendar.getInstance();
@@ -24,12 +22,12 @@ public class MemberDTO {
     MemberDTO(){
     	
     }
-    MemberDTO(String id, String password, String nickName, String birth, String email, Sex sex) {
+    MemberDTO(String id, String password, String name, String birth, String email, String sex) {
         this.id = id;
         this.email = email;
         this.birth = birth;
         this.password = password;
-        this.nickName = nickName;
+        this.name = name;
         this.sex = sex;
     }
     
@@ -50,11 +48,11 @@ public class MemberDTO {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String getNickName() {
-		return nickName;
+	public String getName() {
+		return name;
 	}
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
+	public void setName(String name) {
+		this.name = name;
 	}
 	public String getBirth() {
 		return birth;
@@ -74,10 +72,10 @@ public class MemberDTO {
 	public void setAge(int age) {
 		this.age = age;
 	}
-	public Sex getSex() {
+	public String getSex() {
 		return sex;
 	}
-	public void setSex(Sex sex) {
+	public void setSex(String sex) {
 		this.sex = sex;
 	}
 	public int getStatus() {

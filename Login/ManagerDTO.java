@@ -6,19 +6,19 @@ import java.util.List;
 public class ManagerDTO {
 	String id;
 	String password;
-	String nickName;
+	String name;
 	String birth;
 	String email;
 	int age;
 	String status;// 역할?
-	private Sex sex;
+	String sex;
 
-	ManagerDTO(String id, String password, String nickName, String birth, String email, Sex sex) {
+	ManagerDTO(String id, String password, String name, String birth, String email, String sex) {
 		this.id = id;
 		this.email = email;
 		this.birth = birth;
 		this.password = password;
-		this.nickName = nickName;
+		this.name = name;
 		this.sex = sex;
 	}
 
@@ -38,12 +38,12 @@ public class ManagerDTO {
 		this.password = password;
 	}
 
-	public String getNickName() {
-		return nickName;
+	public String getName() {
+		return name;
 	}
 
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getBirth() {
@@ -70,11 +70,11 @@ public class ManagerDTO {
 		this.age = age;
 	}
 
-	public Sex getSex() {
+	public String getSex() {
 		return sex;
 	}
 
-	public void setSex(Sex sex) {
+	public void setSex(String sex) {
 		this.sex = sex;
 	}
 

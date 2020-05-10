@@ -27,15 +27,16 @@ public class SignUpMember extends JFrame implements ActionListener {
 
 	private JTextField idT;
 	private JTextField pwT;
-	private JTextField nickNameT;
+	private JTextField nameT;
 	private JTextField birthT;
 	private JTextField emailT;
-	JRadioButton maleB, femaleB;
+	private JRadioButton maleB, femaleB;
 	private JButton joinB;
 	public static List<MemberDTO> list = new ArrayList<MemberDTO>();
 	 ImageIcon icon;
 	 JScrollPane scrollPane;
 	SignUpMember() {
+		
 		super("member Join");
 		 JPanel panel = new JPanel() {
 			 public void paintComponent(Graphics g) {
@@ -85,10 +86,10 @@ public class SignUpMember extends JFrame implements ActionListener {
 		group.add(maleB);
 		group.add(femaleB);
 
-		nickNameT = new JTextField("닉네임을 설정하세요");
-		nickNameT.setColumns(10);
-		nickNameT.setBounds(130, 191, 116, 21);
-		panel.add(nickNameT);
+		nameT = new JTextField("닉네임을 설정하세요");
+		nameT.setColumns(10);
+		nameT.setBounds(130, 191, 116, 21);
+		panel.add(nameT);
 
 		JLabel lblNicknamel = new JLabel("닉네임");
 		lblNicknamel.setBounds(42, 194, 76, 15);
@@ -140,9 +141,9 @@ public class SignUpMember extends JFrame implements ActionListener {
 				pwT.setText("");
 			}
 		});
-		nickNameT.addMouseListener(new MouseAdapter() {
+		nameT.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
-				nickNameT.setText("");
+				nameT.setText("");
 			}
 		});
 		birthT.addMouseListener(new MouseAdapter() {
@@ -166,16 +167,15 @@ public class SignUpMember extends JFrame implements ActionListener {
 
 			String id = idT.getText();
 			String password = pwT.getText();
-			String nickName = nickNameT.getText();
+			String name = nameT.getText();
 			String birth = birthT.getText();
 			String email = emailT.getText();
+			String sex = "남성";
 			if (femaleB.isSelected()) {
-				MemberDTO memberDTO = new MemberDTO(id, password, nickName, birth, email, Sex.FEMALE);
-				list.add(memberDTO);
-			} else {
-				MemberDTO memberDTO = new MemberDTO(id, password, nickName, birth, email, Sex.MALE);
-				list.add(memberDTO);
+				sex = "여성";
 			}
+			MemberDTO memberDTO = new MemberDTO(id, password, name, birth, email, sex);
+			list.add(memberDTO);
 
 			JOptionPane.showMessageDialog(this, "아이디가 생성되었습니다.");
 			dispose();
