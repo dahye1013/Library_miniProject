@@ -25,9 +25,9 @@ public class BasicFrameManager extends JFrame {
         
         
         JTabbedPane tab = new JTabbedPane();
-        tab.add(p1,"BookSearch");
-        tab.add(p2,"MyPage");
-        tab.add(p3,"SeatSelect");
+        tab.add(p1,"도서검색");
+        tab.add(p2,"마이페이지");
+        tab.add(p3,"좌석현황");
         
         add(tab);
         
