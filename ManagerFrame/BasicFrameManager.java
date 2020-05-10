@@ -7,6 +7,9 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
+import Login.MemberDTO;
+import Login.SignUpMember;
+
 public class BasicFrameManager extends JFrame {
     public BookManagement p1;
     public LendBookManage p2;
@@ -16,6 +19,8 @@ public class BasicFrameManager extends JFrame {
     public MemberManagement p6;
     
     public BasicFrameManager() {
+    	
+    	
         super("Library");
 
         

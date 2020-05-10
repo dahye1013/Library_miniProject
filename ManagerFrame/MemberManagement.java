@@ -18,8 +18,12 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 
+import Login.MemberDTO;
+import Login.SignUpMember;
+
+
 public class MemberManagement extends JPanel implements ActionListener{
-	
+
     private JButton searchBtn, inquiryBtn, withdrawBtn;
     
     private JTextField searchT;
@@ -48,14 +52,13 @@ public class MemberManagement extends JPanel implements ActionListener{
         searchT = new JTextField("안녕하세요", 30);
         
         //콤보박스 생성
-        String[] comboItem = {"ID", "이름", "닉네임", "생년월일", "나이", "email", "성별", "연체 여부"};
+        String[] comboItem = {"ID", "이름", "생년월일", "나이", "email", "성별", "연체 여부"};
         combo = new JComboBox<String>(comboItem);
         
         //Table 생성
         Vector<String> v = new Vector<String>();
         v.add("ID");
         v.add("이름");
-        v.add("닉네임");
         v.add("생년월일");
         v.add("나이");
         v.add("email");
@@ -63,6 +66,18 @@ public class MemberManagement extends JPanel implements ActionListener{
         v.add("연체 여부");
         model = new DefaultTableModel(v,0);
         table = new JTable(model);
+        
+        for(MemberDTO dto : SignUpMember.list) {
+            Vector<String> v1 = new Vector<String>();
+            v1.add(dto.getId());
+            v1.add(dto.getName());
+            v1.add(dto.getBirth());
+            v1.add(dto.getAge()+"");
+            v1.add(dto.getEmail());
+            v1.add(dto.getSex());
+            v1.add(dto.getStatus()+"");
+            model.addRow(v1);
+        }
         
         //JScrollPanedp table 추가
         JScrollPane scroll = new JScrollPane(table);

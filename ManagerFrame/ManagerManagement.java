@@ -18,8 +18,8 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 
-import Login.MemberDTO;
-import Login.SignUpMember;
+import Login.ManagerDTO;
+import Login.SignUpManager;
 
 public class ManagerManagement extends JPanel implements ActionListener{
 	
@@ -50,29 +50,30 @@ public class ManagerManagement extends JPanel implements ActionListener{
         searchT = new JTextField("안녕하세요", 30);
         
         //콤보박스 생성
-        String[] comboItem = {"ID", "이름", "닉네임", "생년월일", "나이", "email", "성별", "연체 여부"};
+        String[] comboItem = {"ID", "이름",  "생년월일", "나이", "email", "성별", "연체 여부"};
         combo = new JComboBox<String>(comboItem);
         
         //Table 생성
         Vector<String> v = new Vector<String>();
         v.add("ID");
-        v.add("닉네임");
+        v.add("이름");
         v.add("생년월일");
         v.add("나이");
         v.add("email");
         v.add("성별");
+        v.add("연체여부");
         model = new DefaultTableModel(v,0);
         table = new JTable(model);
         
 //        model.setRowCount(0); 
-        for(MemberDTO dto : SignUpMember.list) {
+        for(ManagerDTO dto : SignUpManager.list) {
             Vector<String> v1 = new Vector<String>();
             v1.add(dto.getId());
-            v1.add(dto.getNickName());
+            v1.add(dto.getName());
             v1.add(dto.getBirth());
             v1.add(dto.getAge()+"");
             v1.add(dto.getEmail());
-            v1.add(dto.getSex()+"");
+            v1.add(dto.getSex());
             model.addRow(v1);
         }
         
