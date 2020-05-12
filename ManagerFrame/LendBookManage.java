@@ -26,7 +26,7 @@ class  LendBookManage extends JPanel implements ActionListener{
 	private JScrollPane scroll;
 	private Vector<String> vector;
 	private DefaultTableModel model;
-	
+
 		public void paintComponent(Graphics g) {
     	Dimension d = getSize();
     	ImageIcon img = new ImageIcon("배경2.jpg");

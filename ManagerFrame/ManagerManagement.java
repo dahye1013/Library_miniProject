@@ -4,10 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -18,8 +20,8 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 
-import Login.ManagerDTO;
-import Login.SignUpManager;
+import Login.MemberDTO;
+import Login.SignUp;
 
 public class ManagerManagement extends JPanel implements ActionListener{
 	
@@ -33,13 +35,17 @@ public class ManagerManagement extends JPanel implements ActionListener{
     private JTable table;
 
     private JPanel p, p1, p2, p3, pp12, p4;
-
+    public void paintComponent(Graphics g) {
+    Dimension d = getSize();
+    ImageIcon img = new ImageIcon("Images/MemberManagement.jpg");
+    g.drawImage(img.getImage(),0,0,d.width,d.height, null);
+}
     public ManagerManagement() {    
         
         //라벨 생성
         labelL = new JLabel("Manager Management");
-        labelL.setFont(new Font("고딕체", Font.BOLD , 65));
-        //labelL.setForeground(new Color(255,0,0,0));
+        labelL.setFont(new Font("고딕체", Font.BOLD , 100));
+        labelL.setForeground(new Color(255,0,0,0));
         
         //버튼 생성
         searchBtn = new JButton("검색");
@@ -66,7 +72,7 @@ public class ManagerManagement extends JPanel implements ActionListener{
         table = new JTable(model);
         
 //        model.setRowCount(0); 
-        for(ManagerDTO dto : SignUpManager.list) {
+        for(MemberDTO dto : SignUp.list) {
             Vector<String> v1 = new Vector<String>();
             v1.add(dto.getId());
             v1.add(dto.getName());

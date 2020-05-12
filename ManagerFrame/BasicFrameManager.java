@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
 import Login.MemberDTO;
-import Login.SignUpMember;
+import Login.SignUp;
 
 public class BasicFrameManager extends JFrame {
     public BookManagement p1;
