@@ -10,8 +10,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -39,14 +44,17 @@ public class SignUp extends JFrame implements ActionListener {
     private boolean idCheck = false; // 추가, 아이디 중복체크 여부
     private String pwd;
     private JTextField verifyT;
-    
+    char[] secret_pwd;
+    private String id , password, name, birth, email, sex , status;
+    //이너클래스
+
     SignUp() {
 
         super("member Join");
         JPanel panel = new JPanel() {
             public void paintComponent(Graphics g) {
                 Dimension d = getSize();
-                ImageIcon img = new ImageIcon("images/signUp.png");
+                ImageIcon img = new ImageIcon("Images/signUp.png");
                 g.drawImage(img.getImage(), 0, 0, d.width, d.height, null);
             }
         };
@@ -121,14 +129,13 @@ public class SignUp extends JFrame implements ActionListener {
         btnNewButton.setFont(new Font("굴림", Font.PLAIN, 7));
         btnNewButton.setBounds(64, 49, 54, 23);
         panel.add(btnNewButton);
-        
 
         manager = new JCheckBox("관리자", false);
         manager.setBounds(42, 300, 80, 23);
-        manager.setBackground(new Color(255, 0 , 0, 0));
+        manager.setBackground(new Color(255, 0, 0, 0));
         panel.add(manager);
 
-         verifyT = new JTextField(10);
+        verifyT = new JTextField(10);
         verifyT.setBounds(150, 300, 100, 23);
 
         JLabel verifyL = new JLabel("");
@@ -172,7 +179,7 @@ public class SignUp extends JFrame implements ActionListener {
                 pwd = "";
                 boolean english = false;
                 boolean number = false;
-                char[] secret_pwd = pwT.getPassword();
+                secret_pwd = pwT.getPassword();
 
                 for (int i = 0; i < secret_pwd.length; i++) {
                     int tempPwd = (int) secret_pwd[i];
@@ -217,29 +224,39 @@ public class SignUp extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == joinB) {
+             id = idT.getText();
+             password = pwd;
+             name = nameT.getText();
+             birth = birthT.getText();
+             email = emailT.getText();
+             sex = "남성";
+             status = "Member";
             
-            if(manager.isSelected()) {
+            if (femaleB.isSelected()) {
+                sex = "여성";
+            }
+
+            if (manager.isSelected()) {
                 if (!verifyT.getText().equals("1234")) {
                     JOptionPane.showMessageDialog(this, "올바른 인증번호를 기입하십시오.");
                     return;
                 }
-            }
-            
-            String id = idT.getText();
-            // String password = pwT.getText();
-            String name = nameT.getText();
-            String birth = birthT.getText();
-            String email = emailT.getText();
-            String sex = "남성";
-            if (femaleB.isSelected()) {
-                sex = "여성";
-            }
-            MemberDTO memberDTO = new MemberDTO(id, pwd, name, birth, email, sex);
-            list.add(memberDTO);
+                status ="Manager";
+                MemberDTO memberDTO = new MemberDTO(id, pwd, name, birth, email, sex, status);
+                list.add(memberDTO);
+                InsertTest insertTest = new InsertTest();
+                insertTest.insertArticle();
+                JOptionPane.showMessageDialog(this, "관리자 아이디가 생성되었습니다.");
+                dispose();
 
-            JOptionPane.showMessageDialog(this, "아이디가 생성되었습니다.");
-            dispose();
-
+            } else {
+                MemberDTO memberDTO = new MemberDTO(id, pwd, name, birth, email, sex, status);
+                list.add(memberDTO);
+                InsertTest insertTest = new InsertTest();
+                insertTest.insertArticle();
+                JOptionPane.showMessageDialog(this, "회원 아이디가 생성되었습니다.");
+                dispose();
+            }
         } else if (e.getSource() == btnNewButton) {
             String id = idT.getText();
             for (int i = 0; i < list.size(); i++) {
@@ -253,5 +270,61 @@ public class SignUp extends JFrame implements ActionListener {
         }
 
     }
+    //inner class----------------------------------------------------------------
+    public class InsertTest {
+        String driver = "oracle.jdbc.driver.OracleDriver";
+        String url = "jdbc:oracle:thin:@localhost:1521:xe";
+        String username = "c##member";
+        String password = "1234";
+        Connection conn;
+        PreparedStatement pstmt;
+        
+        public InsertTest() {
+            try {
+                Class.forName("oracle.jdbc.driver.OracleDriver");
+                System.out.println("드라이버 로딩 성공");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } 
+            
+        }
+        
+        public void getConnection() {   
+            try {
+                conn = DriverManager.getConnection(url , username , password);
+                System.out.println("접속성공");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        public void insertArticle() {
+            this.getConnection();
+            String sql = "insert into MEMBER_TABLE values(NO_SEQ.NEXTVAL,?,?,?)";
+            try {
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1,  id);
+                pstmt.setString(2, pwd);
+                pstmt.setString(3, name);
+                
+                int su = pstmt.executeUpdate();//실행
+                System.out.println(su+"개의 행이 만들어졌습니다.");
+                
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }finally{
+                try {
+                    if(pstmt != null) pstmt.close();
+                    if(pstmt != null) conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                
+            }
+            
+            
+        }
+        
 
+    }
 }
