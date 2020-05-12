@@ -4,18 +4,20 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 public class LoginFrame extends JFrame{
     static LoginFrame login ;
-	public LoginManager manager;
-	public LoginMember member;
+	public Login member;
 	
 
     LoginFrame(){
@@ -23,12 +25,10 @@ public class LoginFrame extends JFrame{
         
         Container c = this.getContentPane();
         
-        manager = new LoginManager();
-        member = new LoginMember();
+        member = new Login();
         
 		JTabbedPane tab = new JTabbedPane(JTabbedPane.NORTH);
 		tab.add(member, "일반회원" );
-		tab.add(manager, "관리자");	
 		
 		c.add(tab);
 		
@@ -36,7 +36,14 @@ public class LoginFrame extends JFrame{
         setVisible(true);
 		setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        
+        addWindowListener(new WindowAdapter(){
+            @Override
+            public void windowClosing(WindowEvent e){
+                int result=  JOptionPane.showConfirmDialog(null, "종료하시겠습니까?");
+                if(result == JOptionPane.YES_OPTION)
+                    System.exit(0);
+            }
+        });
         repaint();
         
     }

@@ -16,12 +16,22 @@ public class MemberDTO {
     int age;
     String sex;
     int status = 0;
-    // 정상 0 , 연체자 1
+    // 일반 회원 - 정상 0 , 연체자 1
+    // 관리자 - 일반관리자0 , 채팅관리자 1
+    String[] borrow = new String[3]; //빌린책 리스트
+    
     Calendar cal = Calendar.getInstance();
     
     MemberDTO(){
     	
     }
+    public String[] getBorrow() {
+        return borrow;
+    }
+    public void setBorrow(String[] borrow) {
+        this.borrow = borrow;
+    }
+    
     MemberDTO(String id, String password, String name, String birth, String email, String sex) {
         this.id = id;
         this.email = email;

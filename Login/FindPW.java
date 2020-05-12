@@ -73,17 +73,10 @@ public class FindPW extends JFrame implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==findB) {
-        	if (SignUpManager.list.size() != 0) {
-				for (int i = 0; i < SignUpManager.list.size(); i++) {
-					if (idT.getText().equals(SignUpManager.list.get(i).getId())) {
-						JOptionPane.showMessageDialog(this,
-								"회원님의 비밀번호는 [" + SignUpManager.list.get(i).getPassword() + "] 입니다");
-					}
-				}
-			} else if (SignUpMember.list.size() != 0) {
-				for (int i = 0; i < SignUpMember.list.size(); i++) {
-					if (idT.getText().equals(SignUpMember.list.get(i).getId())) {
-						JOptionPane.showMessageDialog(this, "회원님의 비밀번호는 [" + SignUpMember.list.get(i).getPassword() + "] 입니다");
+        	if (SignUp.list.size() != 0) {
+				for (int i = 0; i < SignUp.list.size(); i++) {
+					if (idT.getText().equals(SignUp.list.get(i).getId())) {
+						JOptionPane.showMessageDialog(this, "회원님의 비밀번호는 [" + SignUp.list.get(i).getPassword() + "] 입니다");
 					}
 				}
 			} else {
