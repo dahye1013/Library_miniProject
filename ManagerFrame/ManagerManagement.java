@@ -37,7 +37,7 @@ public class ManagerManagement extends JPanel implements ActionListener{
     private JPanel p, p1, p2, p3, pp12, p4;
     public void paintComponent(Graphics g) {
     Dimension d = getSize();
-    ImageIcon img = new ImageIcon("Images/MemberManagement.jpg");
+    ImageIcon img = new ImageIcon("Images/ManagerrManagement.jpg");
     g.drawImage(img.getImage(),0,0,d.width,d.height, null);
 }
     public ManagerManagement() {    
@@ -67,7 +67,7 @@ public class ManagerManagement extends JPanel implements ActionListener{
         v.add("나이");
         v.add("email");
         v.add("성별");
-        v.add("연체여부");
+        v.add("직책");
         model = new DefaultTableModel(v,0);
         table = new JTable(model);
         
@@ -80,6 +80,8 @@ public class ManagerManagement extends JPanel implements ActionListener{
             v1.add(dto.getAge()+"");
             v1.add(dto.getEmail());
             v1.add(dto.getSex());
+            v1.add(dto.getStatus()+"");
+            
             model.addRow(v1);
         }
         

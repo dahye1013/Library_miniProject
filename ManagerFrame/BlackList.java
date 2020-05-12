@@ -4,11 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -30,6 +32,12 @@ public class BlackList extends JPanel implements ActionListener {
 	private JTable table;
 
 	private JPanel p, p1, p2, p3, p4, labelP, btnP;
+	
+	public void paintComponent(Graphics g) {
+		Dimension d = getSize();
+		ImageIcon img = new ImageIcon("Images/BlackList.jpg");
+		g.drawImage(img.getImage(), 0, 0, d.width, d.height, null);
+	}
 
 	public BlackList() {
 
