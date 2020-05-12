@@ -3,12 +3,14 @@ package MemberFrame;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Vector;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -186,6 +188,11 @@ public class MyPage extends JPanel implements ActionListener {
 
 		}
 
+	}
+	public void paintComponent(Graphics g) {
+	       Dimension d = getSize();
+	       ImageIcon img = new ImageIcon("images/myPage.jpg");
+	       g.drawImage(img.getImage(),0,0,d.width,d.height, null);
 	}
 
 }
