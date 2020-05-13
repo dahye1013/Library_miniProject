@@ -13,11 +13,11 @@ public class MemberDTO {
     String name;
     String birth;
     String email;
-    int age;
-    String sex;
-    String status ;
-    // 일반 회원 - 정상 0 , 연체자 1
-    // 관리자 - 일반관리자0 , 채팅관리자 1
+    int age; 
+    int sex; //남자 0 여자 1
+    int status ; //멤버0 메니저1
+    int state; // 정상 0 연체자 1
+    
     String[] borrow = new String[3]; //빌린책 리스트
     
     Calendar cal = Calendar.getInstance();
@@ -32,7 +32,7 @@ public class MemberDTO {
         this.borrow = borrow;
     }
     
-    MemberDTO(String id, String password, String name, String birth, String email, String sex, String status) {
+    MemberDTO(String id, String password, String name, String birth, String email, int sex, int status) {
         this.id = id;
         this.email = email;
         this.birth = birth;
@@ -83,16 +83,16 @@ public class MemberDTO {
 	public void setAge(int age) {
 		this.age = age;
 	}
-	public String getSex() {
+	public int getSex() {
 		return sex;
 	}
-	public void setSex(String sex) {
+	public void setSex(int sex) {
 		this.sex = sex;
 	}
-	public String getStatus() {
+	public int getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 	public Calendar getCal() {
