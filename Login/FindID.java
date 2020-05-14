@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -16,6 +18,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+
+import ManagerFrame.MemberDAO;
+import ManagerFrame.MemberManagement;
 
 public class FindID extends JFrame implements ActionListener {
 	JFrame frame;
@@ -25,6 +30,8 @@ public class FindID extends JFrame implements ActionListener {
 	JTextField emailT;
 	JButton findB, cancelB;
 	JLabel title = new JLabel("");
+	private MemberDAO memberDAO = new MemberDAO();// 0514추가
+	public  List<MemberDTO> list = new ArrayList<MemberDTO>();// 0514추가 수정
 
 	public void paintComponent(Graphics g) {
 		Dimension d = getSize();
@@ -90,11 +97,12 @@ public class FindID extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		list = memberDAO.getMemberList();
 		if (e.getSource() == findB) {
-			if (SignUp.list.size() != 0) {
-				for (int i = 0; i < SignUp.list.size(); i++) {
-					if (nickNameT.getText().equals(SignUp.list.get(i).getId())) {
-						JOptionPane.showMessageDialog(this, "회원님의 아이디는 [" + SignUp.list.get(i).getId() + "] 입니다");
+			if (list.size() != 0) {
+				for (int i = 0; i < list.size(); i++) {
+					if (nickNameT.getText().equals(list.get(i).getId())) {
+						JOptionPane.showMessageDialog(this, "회원님의 아이디는 [" + list.get(i).getId() + "] 입니다");
 					}
 				}
 			} else {

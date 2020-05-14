@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,15 +41,15 @@ public class SignUp extends JFrame implements ActionListener {
 	JRadioButton maleB, femaleB;
 	private JButton joinB, btnNewButton;
 	public static List<MemberDTO> list = new ArrayList<MemberDTO>();
-	private boolean pwdCheck = false; // 추가, 비밀번호조건여부
-	private boolean idCheck = false; // 추가, 아이디 중복체크 여부
+	private boolean pwdCheck = false; // 비밀번호조건여부
+	private boolean idCheck = false; // 아이디 중복체크 여부
 	private String pwd;
 	private JTextField verifyT;
 	char[] secret_pwd;
 	private String id, password, name, birth, email;
-	int status, sex;
+	int status, sex, state = 0;
 	// 이너클래스
-
+	
 	SignUp() {
 
 		super("member Join");
@@ -170,11 +171,11 @@ public class SignUp extends JFrame implements ActionListener {
 		pwT.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				pwT.setText("");
-				pwT.setEchoChar('●'); // 추가
+				pwT.setEchoChar('●'); 
 
 			}
 		});
-		pwT.addKeyListener(new KeyAdapter() { // 추가
+		pwT.addKeyListener(new KeyAdapter() { 
 			@Override
 			public void keyReleased(KeyEvent e) {
 				pwd = "";
@@ -272,7 +273,8 @@ public class SignUp extends JFrame implements ActionListener {
 
 	}
 
-	// inner class----------------------------------------------------------------
+	// inner class / DB에다가 회원정보 넣는다.---------------------------------------
+	//				 MEMBER_TABLE
 	public class InsertTest {
 		String driver = "oracle.jdbc.driver.OracleDriver";
 		String url = "jdbc:oracle:thin:@localhost:1521:xe";
@@ -280,6 +282,7 @@ public class SignUp extends JFrame implements ActionListener {
 		String password = "1234";
 		Connection conn;
 		PreparedStatement pstmt;
+		ResultSet rs;
 
 		public InsertTest() {
 			try {
@@ -302,7 +305,7 @@ public class SignUp extends JFrame implements ActionListener {
 
 		public void insertMember() {
 			this.getConnection();
-			String sql = "insert into MEMBER_TABLE values(NO_SEQ.NEXTVAL,?,?,?,?,?,?,?)";
+			String sql = "insert into MEMBER_TABLE values(NO_SEQ.NEXTVAL,?,?,?,?,?,?,?,?)";
 			try {
 				pstmt = conn.prepareStatement(sql);
 				pstmt.setString(1, id);
@@ -312,8 +315,9 @@ public class SignUp extends JFrame implements ActionListener {
 				pstmt.setString(5, email);
 				pstmt.setInt(6, sex);
 				pstmt.setInt(7, status);
+				pstmt.setInt(8, state);
 				int su = pstmt.executeUpdate();// 실행
-				System.out.println(su + "개의 행이 만들어졌습니다.");
+				System.out.println(su + "명 회원가입 완료");
 
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -330,7 +334,42 @@ public class SignUp extends JFrame implements ActionListener {
 			}
 
 		}
-
+		public List<MemberDTO> getMemberList() {
+			List<MemberDTO> list = new ArrayList<MemberDTO>();
+			getConnection();
+			String sql = "select*from MEMBER_TABLE";
+			try {
+				pstmt = conn.prepareStatement(sql);
+				rs = pstmt.executeQuery();
+				while (rs.next()) {
+					MemberDTO memberDTO = new MemberDTO();
+					memberDTO.setSeq(rs.getInt("NO_SEQ"));// seq
+					memberDTO.setId(rs.getString("id"));// id
+					memberDTO.setPassword(rs.getString("password"));//
+					memberDTO.setName(rs.getString("name"));//
+					memberDTO.setBirth(rs.getString("birth"));//
+					memberDTO.setEmail(rs.getString("email"));// email
+					memberDTO.setSex(rs.getInt("sex"));// sex
+					memberDTO.setStatus(rs.getInt("status"));// state 관리자
+					memberDTO.setState(rs.getInt("state"));// status 연체
+					list.add(memberDTO);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (rs != null)
+						rs.close();
+					if (pstmt != null)
+						pstmt.close();
+					if (conn != null)
+						conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			return list;
+		}
 
 	}
 }

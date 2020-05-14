@@ -17,12 +17,9 @@ public class MemberDTO {
     int sex; //남자 0 여자 1
     int status ; //멤버0 메니저1
     int state; // 정상 0 연체자 1
-    
+    int seq; //0514추가 
     String[] borrow = new String[3]; //빌린책 리스트
-    
-    Calendar cal = Calendar.getInstance();
-    
-    MemberDTO(){
+    public MemberDTO(){//0514수정
     	
     }
     public String[] getBorrow() {
@@ -32,7 +29,8 @@ public class MemberDTO {
         this.borrow = borrow;
     }
     
-    MemberDTO(String id, String password, String name, String birth, String email, int sex, int status) {
+    MemberDTO(String id, String password, String name, String birth,
+    		String email, int sex, int status) {
         this.id = id;
         this.email = email;
         this.birth = birth;
@@ -42,11 +40,8 @@ public class MemberDTO {
         this.status = status;
     }
     
-    public void calcAge() {
-    	birth = this.birth.substring(0, 3);
-    	int year = cal.get(Calendar.YEAR);
-    	this.age = year-Integer.parseInt(birth);
-    }
+
+    
 	public String getId() {
 		return id;
 	}
@@ -77,9 +72,13 @@ public class MemberDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public int getAge() {
-		return age;
+	public int getAge() { //0514 수정
+    	int birth = Integer.parseInt(this.birth.substring(0, 4));
+    	int year = cal.get(Calendar.YEAR);
+    	this.age = year-birth;
+    	return age;
 	}
+	
 	public void setAge(int age) {
 		this.age = age;
 	}
@@ -95,12 +94,22 @@ public class MemberDTO {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	public Calendar getCal() {
-		return cal;
-	}
-	public void setCal(Calendar cal) {
-		this.cal = cal;
-	}
 
+
+    //--------0514추가-----------------
+    public int getState() {
+		return state;
+	}
+	public void setState(int state) {
+		this.state = state;
+	}
+	public int getSeq() {
+		return seq;
+	}
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
+	Calendar cal = Calendar.getInstance();
+	//-----------------------------
 
 }
