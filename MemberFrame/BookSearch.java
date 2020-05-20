@@ -1,11 +1,20 @@
 package MemberFrame;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -20,18 +29,47 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 
-public class BookSearch extends JPanel implements ActionListener {
+import manager.dao.BookDAO;
+import manager.dao.LendDAO;
+import manager.dao.MemberDAO;
+import manager.dao.ReportDAO;
+import manager.dto.BookDTO;
+import manager.dto.LendDTO;
+import manager.dto.MemberDTO;
+import manager.dto.ReportDTO;
+import managerFrame.BookManagement.InsertBook;
+import managerFrame.BookReport;
+import managerFrame.LendBookManage;
 
-	private JButton searchBtn, rentBtn;
+public class BookSearch extends JPanel implements ActionListener, KeyListener {
 
-	private JTextField searchT, codeT, nameT, authorT, genreT, publisherT, rentT;
-	private JLabel titleL, codeL, nameL, authorL, genreL, publisherL, rentL;
+	private JButton searchBtn, lendBtn, outputBtn;
 
-	private JComboBox<String> combo;
+	private JTextField searchT, codeT, titleT, authorT, genreT, publisherT, lendT;
+	private JLabel labelL, codeL, titleL, authorL, genreL, publisherL, lendL;
+	private JComboBox<String> searchCombo;
+
 	private DefaultTableModel model;
 	private JTable table;
 
 	private JPanel p, p1, p2, p3, pp12, p4, p5, pp45;
+
+	private BookDTO bookDTO = new BookDTO();
+	private BookDAO bookDAO = new BookDAO();
+	static List<BookDTO> bookList = new ArrayList<BookDTO>();
+
+	private int seq;
+
+	private MemberDTO memberDTO = new MemberDTO();
+	private MemberDAO memberDAO = new MemberDAO();
+	static List<MemberDTO> memberList = new ArrayList<MemberDTO>();
+
+	private LendDTO lendDTO = new LendDTO();
+	private LendDAO lendDAO = new LendDAO();
+	static List<LendDTO> lendList = new ArrayList<LendDTO>();
+	
+	private ReportDTO reportDTO = new ReportDTO();
+	private ReportDAO reportDAO = new ReportDAO();
 
 	public void paintComponent(Graphics g) {
 		Dimension d = getSize();
@@ -42,33 +80,41 @@ public class BookSearch extends JPanel implements ActionListener {
 	public BookSearch() {
 
 		// 라벨 생성
-		titleL = new JLabel("Book Search");
-		titleL.setFont(new Font("고딕체", Font.BOLD, 20));
+		labelL = new JLabel("Book Management");
+		labelL.setFont(new Font("고딕체", Font.BOLD, 100));
+		labelL.setForeground(new Color(255, 0, 0, 0));
 
 		codeL = new JLabel("도서코드");
-		nameL = new JLabel("도서명");
+		titleL = new JLabel("도서명");
 		authorL = new JLabel("저자");
 		publisherL = new JLabel("출판사");
 		genreL = new JLabel("장르");
-		rentL = new JLabel("대여");
+		lendL = new JLabel("대여");
 
 		// 버튼 생성
 		searchBtn = new JButton("검색");
-		rentBtn = new JButton("대여");
+		lendBtn = new JButton("대여");
+		outputBtn = new JButton("전체조회");
 
 		// 텍스트필드 생성
 		searchT = new JTextField("안녕하세요", 30);
 
 		codeT = new JTextField(10);
-		nameT = new JTextField(10);
+		codeT.setEditable(false);
+		titleT = new JTextField(10);
+		titleT.setEditable(false);
 		authorT = new JTextField(10);
+		authorT.setEditable(false);
 		publisherT = new JTextField(10);
+		publisherT.setEditable(false);
 		genreT = new JTextField(10);
-		rentT = new JTextField(10);
+		genreT.setEditable(false);
+		lendT = new JTextField(10);
+		lendT.setEditable(false);
 
 		// 콤보박스 생성
-		String[] comboItem = { "도서명", "도서코드", "저자", "출판사", "장르" };
-		combo = new JComboBox<String>(comboItem);
+		String[] comboItem = { "전체 도서", "소설", "시/에세이", "자기계발", "경제/경영", "인문", "역사", "사회", "과학" };
+		searchCombo = new JComboBox<String>(comboItem);
 
 		// Table 생성
 		Vector<String> v = new Vector<String>();
@@ -78,21 +124,34 @@ public class BookSearch extends JPanel implements ActionListener {
 		v.add("출판사");
 		v.add("장르");
 		v.add("대여여부");
-		model = new DefaultTableModel(v, 0);
+		model = new DefaultTableModel(v, 0) {
+			@Override
+			public boolean isCellEditable(int row, int column) { // 수정, 입력 불가
+				return false;
+			}
+		};
+
 		table = new JTable(model);
+		// 테이블 컬럼 크기 설정
+		table.getColumnModel().getColumn(0).setPreferredWidth(80);
+		table.getColumnModel().getColumn(1).setPreferredWidth(320);
+		table.getColumnModel().getColumn(2).setPreferredWidth(100);
+		table.getColumnModel().getColumn(3).setPreferredWidth(100);
+		table.getColumnModel().getColumn(4).setPreferredWidth(100);
+		table.getColumnModel().getColumn(5).setPreferredWidth(100);
 
 		// JScrollPanedp table 추가
 		JScrollPane scroll = new JScrollPane(table);
-		scroll.setPreferredSize(new Dimension(1000, 550));
+		scroll.setPreferredSize(new Dimension(1000, 430));
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
 		// 배치
 		p1 = new JPanel();
-		p1.add(titleL); // 도서관리 title
+		p1.add(labelL); // 도서관리 title
 
 		// 검색창
 		p2 = new JPanel();
-		p2.add(combo);
+		p2.add(searchCombo);
 		p2.add(searchT);
 		p2.add(searchBtn);
 
@@ -109,20 +168,21 @@ public class BookSearch extends JPanel implements ActionListener {
 		p4 = new JPanel();
 		p4.add(codeL);
 		p4.add(codeT);
-		p4.add(nameL);
-		p4.add(nameT);
+		p4.add(titleL);
+		p4.add(titleT);
 		p4.add(authorL);
 		p4.add(authorT);
 		p4.add(genreL);
 		p4.add(genreT);
 		p4.add(publisherL);
 		p4.add(publisherT);
-		p4.add(rentL);
-		p4.add(rentT);
+		p4.add(lendL);
+		p4.add(lendT);
 
 		// 추가,삭제,수정 버튼
 		p5 = new JPanel();
-		p5.add(rentBtn);
+		p5.add(lendBtn);
+		p5.add(outputBtn);
 
 		pp45 = new JPanel();
 		pp45.setLayout(new BorderLayout());
@@ -138,18 +198,225 @@ public class BookSearch extends JPanel implements ActionListener {
 
 		add(p);
 
+		p1.setOpaque(false);
+		p2.setOpaque(false);
+		p3.setOpaque(false);
+		p4.setOpaque(false);
+		p5.setOpaque(false);
+		pp12.setOpaque(false);
+		pp45.setOpaque(false);
+		p.setOpaque(false);
+
 		// 이벤트
-		rentBtn.addActionListener(this);
+		searchBtn.addActionListener(this);
+		lendBtn.addActionListener(this);
+		outputBtn.addActionListener(this);
+		searchT.addKeyListener(this);
+
+		// 마우스 이벤트
+		table.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				
+				int i = table.getSelectedRow();				
+
+				titleT.setText((table.getValueAt(i, 1)+""));
+				codeT.setText((table.getValueAt(i, 0)+""));
+				authorT.setText((table.getValueAt(i, 2)+""));
+				publisherT.setText((table.getValueAt(i, 3)+""));
+				genreT.setText((table.getValueAt(i, 4)+""));
+				lendT.setText((table.getValueAt(i, 5)+""));
+			}
+		});	
+
+		searchT.addMouseListener(new MouseAdapter() {
+			public void mousePressed(MouseEvent e) {
+				searchT.setText("");
+			}
+		});
+		
+		output();
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		JOptionPane.showMessageDialog(this, "대여가 완료되었습니다", "대여 완료", JOptionPane.INFORMATION_MESSAGE);
-		// JOptionPane.showMessageDialog(this, "이미 대여중인 책입니다", "대여 불가",
-		// JOptionPane.WARNING_MESSAGE);
-		// JOptionPane.showMessageDialog(this, "도서 대여는 3권만 가능합니다", "대여 불가",
-		// JOptionPane.WARNING_MESSAGE);
-		// JOptionPane.showMessageDialog(this, "대여가 완료된 책입니다", "대여 불가",
-		// JOptionPane.WARNING_MESSAGE);
+		if (e.getSource() == searchBtn) {
+			model.setRowCount(0);
+			search();
+		} else if (e.getSource() == lendBtn) {
+			lendBook();
+			output();
+		} else if (e.getSource() == outputBtn) {
+			System.out.println(LendBookManage.lendCount+"대여 횟수");
+			output();
+		}
 	}// actionPerformed()
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			searchBtn.doClick();
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
+
+	// 테이블 출력
+	public void output() {
+		model.setRowCount(0);
+
+		List<BookDTO> list = bookDAO.getBookList();
+		for (BookDTO bookDTO : list) {
+			Vector<String> v = new Vector<String>();
+			v.add(bookDTO.getCode() + ""); // ----------------------------------------0515수정, code로 변수명 수정
+			v.add(bookDTO.getTitle());
+			v.add(bookDTO.getAuthor());
+			v.add(bookDTO.getPublisher());
+			v.add(bookDTO.getGenre());
+			v.add(bookDTO.getStringLendCheck());
+			model.addRow(v);
+		}
+	}// output()
+
+	// 테이블 검색
+	public void search() {
+		// model.setRowCount(0); ??
+		String search = searchT.getText();
+		String comboBox = (String) searchCombo.getSelectedItem();
+		bookList = bookDAO.getBookList();
+
+		if (comboBox.equals("전체 도서")) {
+			for (int i = 0; i < bookList.size(); i++) {
+				if (search.equals(bookList.get(i).getTitle()) || bookList.get(i).getTitle().contains(search)
+						|| search.equals(""))
+					outputRecord(i);
+			}
+		} else if (comboBox.equals("소설")) {
+			searchTitle();
+		} else if (comboBox.equals("시/에세이")) {
+			searchTitle();
+		} else if (comboBox.equals("자기계발")) {
+			searchTitle();
+		} else if (comboBox.equals("경제/경영")) {
+			searchTitle();
+		} else if (comboBox.equals("역사")) {
+			searchTitle();
+		} else if (comboBox.equals("인문")) {
+			searchTitle();
+		} else if (comboBox.equals("역사")) {
+			searchTitle();
+		} else if (comboBox.equals("사회")) {
+			searchTitle();
+		} else if (comboBox.equals("과학")) {
+			searchTitle();
+		}
+
+	}// search()
+
+	public void searchTitle() {
+
+		String search = searchT.getText();
+		String comboBox = (String) searchCombo.getSelectedItem();
+		bookList = bookDAO.getBookList();
+
+		for (int i = 0; i < bookList.size(); i++) {
+			if (comboBox.equals(bookList.get(i).getGenre()) && search.equals(""))
+				outputRecord(i);
+			else if (comboBox.equals(bookList.get(i).getGenre()) && search.equals(bookList.get(i).getTitle()))
+				outputRecord(i);
+			else if (comboBox.equals(bookList.get(i).getGenre()) && bookList.get(i).getTitle().contains(search))
+				outputRecord(i);
+		}
+	}
+
+	// 테이블 검색 output
+	public void outputRecord(int i) {
+		Vector<String> v = new Vector<String>();
+		v.add(bookList.get(i).getCode() + "");
+		v.add(bookList.get(i).getTitle());
+		v.add(bookList.get(i).getAuthor());
+		v.add(bookList.get(i).getPublisher());
+		v.add(bookList.get(i).getGenre());
+		v.add(bookList.get(i).getStringLendCheck());
+		model.addRow(v);
+	}// outputRecord()
+
+	// 대여
+	private void lendBook() {
+		
+		// 로그인한 회원 정보 가져오기
+		BasicFrameMember bm = new BasicFrameMember();
+		
+		List<MemberDTO> memberList = memberDAO.getMemberList();
+		
+		MemberDTO memberDTO =new MemberDTO();
+		for (int i = 0; i < memberList.size(); i++) {
+			if (bm.getKey() == memberList.get(i).getSeq()) {
+		
+				memberDTO = memberList.get(i);				
+			}
+		}		
+
+		int count = 0;
+		List<LendDTO> lendList = lendDAO.getLendList();
+
+		for (LendDTO lendDTO : lendList) {
+			if (memberDTO.getId().equals(lendDTO.getId())) {
+				count++;
+				if (lendDTO.getState() == 1) {
+					JOptionPane.showMessageDialog(this, "[연체자] 도서를 대여할 수 없습니다	    \n - 책을 반납하여 주세요", "대여불가",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				} else if (count >= 3) {
+					JOptionPane.showMessageDialog(this, "도서 대여는 3권만  가능합니다", "대여불가", JOptionPane.WARNING_MESSAGE);
+					return;
+				}
+			} else if (codeT.getText().equals(lendDTO.getCode() + "")) {
+				JOptionPane.showMessageDialog(this, "이미 대여중인 책입니다", "대여불가", JOptionPane.WARNING_MESSAGE);
+				return;
+			}
+
+		}
+
+		lendDTO = new LendDTO();
+		lendDTO.setId(memberDTO.getId());
+		lendDTO.setName(memberDTO.getName());
+		lendDTO.setEmail(memberDTO.getEmail());
+		lendDTO.setCode(Integer.parseInt(codeT.getText()));
+		lendDTO.setTitle(titleT.getText());
+		lendDTO.setLendCheck(1); // 대여
+		lendDTO.setState(0); // 처음 대여할때는 비연체자
+
+		// list에 dto추가
+		lendList.add(lendDTO);
+
+		// DB에 데이터 추가
+		lendDAO.lendInsert(lendDTO);
+
+		JOptionPane.showMessageDialog(this, "대여 완료되었습니다", "대여완료", JOptionPane.INFORMATION_MESSAGE);
+		
+		//==================================================
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("M");
+		int nowMon =Integer.parseInt(sdf.format(new Date()));
+		LendBookManage lb = new LendBookManage();
+
+		reportDAO.memberUpdate(nowMon);
+		
+		bookList = bookDAO.getBookList();
+		for (BookDTO bookDTO : bookList) {
+			if (codeT.getText().equals(bookDTO.getCode() + "")) {
+				bookDTO.setLendCheck(1);
+				lendDAO.lendCheckUpdate(bookDTO);
+				System.out.println(bookDTO.getLendCheck());
+			}
+		}
+
+		output();
+	}
 
 }
