@@ -1,7 +1,6 @@
-package Login;
+package login;
 
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -19,13 +18,14 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import ManagerFrame.MemberDAO;
-import ManagerFrame.MemberManagement;
+import manager.dao.MemberDAO;
+import manager.dto.MemberDTO;
+
 
 public class FindID extends JFrame implements ActionListener {
 	JFrame frame;
-	JTextField nickNameT;
-	JLabel nickNameL;
+	JTextField nameT;
+	JLabel nameL;
 	JLabel emailL;
 	JTextField emailT;
 	JButton findB, cancelB;
@@ -53,15 +53,15 @@ public class FindID extends JFrame implements ActionListener {
 		title.setBounds(105, 10, 64, 21);
 		this.add(title);
 
-		nickNameL = new JLabel("닉네임");
-		nickNameL.setFont(new Font("굴림", Font.PLAIN, 14));
-		nickNameL.setBounds(48, 62, 57, 15);
-		this.add(nickNameL);
+		nameL = new JLabel("이름");
+		nameL.setFont(new Font("굴림", Font.PLAIN, 14));
+		nameL.setBounds(48, 62, 57, 15);
+		this.add(nameL);
 
-		nickNameT = new JTextField();
-		nickNameT.setBounds(127, 60, 116, 21);
-		getContentPane().add(nickNameT);
-		nickNameT.setColumns(10);
+		nameT = new JTextField();
+		nameT.setBounds(127, 60, 116, 21);
+		getContentPane().add(nameT);
+		nameT.setColumns(10);
 
 		emailL = new JLabel("이메일");
 		emailL.setFont(new Font("굴림", Font.PLAIN, 14));
@@ -94,23 +94,25 @@ public class FindID extends JFrame implements ActionListener {
 		});
 
 	}
-
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		list = memberDAO.getMemberList();
 		if (e.getSource() == findB) {
 			if (list.size() != 0) {
 				for (int i = 0; i < list.size(); i++) {
-					if (nickNameT.getText().equals(list.get(i).getId())) {
+					if (nameT.getText().equals(list.get(i).getName()) && emailT.getText().equals(list.get(i).getEmail())) {
 						JOptionPane.showMessageDialog(this, "회원님의 아이디는 [" + list.get(i).getId() + "] 입니다");
+						return;
 					}
-				}
+				}//for
+				JOptionPane.showMessageDialog(this, "등록된 회원정보가 없습니다.");	
 			} else {
 				JOptionPane.showMessageDialog(this, "등록된 회원정보가 없습니다.");
-			}
+			}//size 체크(null아닐때)
 		} else if (e.getSource() == cancelB) {
 			dispose();
-		}
+		}//버튼 선택 if
 
 	}
 

@@ -1,4 +1,4 @@
-package Login;
+package login;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -14,7 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import ManagerFrame.MemberDAO;
+import manager.dao.MemberDAO;
+import manager.dto.MemberDTO;
 
 public class FindPW extends JFrame implements ActionListener {
 	private JFrame frame;
@@ -80,19 +81,25 @@ public class FindPW extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		list = memberDAO.getMemberList();
 		if (e.getSource() == findB) {
+
 			if (list.size() != 0) {
 				for (int i = 0; i < list.size(); i++) {
-					if (idT.getText().equals(list.get(i).getId())) {
-						JOptionPane.showMessageDialog(this,
-								"회원님의 비밀번호는 [" + list.get(i).getPassword() + "] 입니다");
+					if (idT.getText().equals(list.get(i).getId()) && emailT.getText().equals(list.get(i).getEmail())) {
+						
+						new LoginSendMail().findPWMail(list.get(i).getId(),list.get(i).getEmail(),list.get(i).getPassword());
+						JOptionPane.showMessageDialog(this, "비밀번호을 해당 이메일로 발송하였습니다.");
+						dispose();
+						return;
+						
 					}
 				}
+				JOptionPane.showMessageDialog(this, "등록된 회원정보가 없습니다.");	
 			} else {
 				JOptionPane.showMessageDialog(this, "등록된 회원정보가 없습니다.");
-			}
+			}//같은 비밀번호 찾기 if
 		} else if (e.getSource() == cancelB) {
 			dispose();
-		}
+		}//버튼 선택 if
 
 	}
 

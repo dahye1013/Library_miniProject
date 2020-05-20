@@ -1,4 +1,4 @@
-package Login;
+package login;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,11 +13,12 @@ import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -30,6 +31,9 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+
+import manager.dao.MemberDAO;
+import manager.dto.MemberDTO;
 
 public class SignUp extends JFrame implements ActionListener {
 	private JCheckBox manager;
@@ -49,7 +53,7 @@ public class SignUp extends JFrame implements ActionListener {
 	private String id, password, name, birth, email;
 	int status, sex, state = 0;
 	// 이너클래스
-	
+
 	SignUp() {
 
 		super("member Join");
@@ -83,6 +87,7 @@ public class SignUp extends JFrame implements ActionListener {
 
 		pwT = new JPasswordField("영문혼합8자리이상");
 		pwT.setColumns(10);
+		pwT.setEchoChar((char) 0);
 		pwT.setBounds(130, 83, 116, 21);
 		panel.add(pwT);
 
@@ -134,10 +139,12 @@ public class SignUp extends JFrame implements ActionListener {
 
 		manager = new JCheckBox("관리자", false);
 		manager.setBounds(42, 300, 80, 23);
+		manager.setOpaque(false);
 		manager.setBackground(new Color(255, 0, 0, 0));
 		panel.add(manager);
 
-		verifyT = new JTextField(10);
+		verifyT = new JTextField(10); 
+	
 		verifyT.setBounds(150, 300, 100, 23);
 
 		JLabel verifyL = new JLabel("");
@@ -156,12 +163,21 @@ public class SignUp extends JFrame implements ActionListener {
 
 		joinB.addActionListener(this);
 		btnNewButton.addActionListener(this);
-		manager.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				panel.add(verifyT);
-				verifyL.setText("관리자 인증번호를 입력하십시오");
+		manager.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (manager.isSelected()) {
+					panel.add(verifyT);
+					verifyL.setText("관리자 인증번호를 입력하십시오");
+				} else {
+					// panel.remove(verifyT);
+					verifyL.setText("");
+				}
 			}
+
 		});
+
 		idT.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				idCheck = false;
@@ -171,11 +187,11 @@ public class SignUp extends JFrame implements ActionListener {
 		pwT.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				pwT.setText("");
-				pwT.setEchoChar('●'); 
+				pwT.setEchoChar('●');
 
 			}
 		});
-		pwT.addKeyListener(new KeyAdapter() { 
+		pwT.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
 				pwd = "";
@@ -225,7 +241,9 @@ public class SignUp extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		//-----------------------회원가입 버튼--------------------------
 		if (e.getSource() == joinB) {
+
 			id = idT.getText();
 			password = pwd;
 			name = nameT.getText();
@@ -233,6 +251,29 @@ public class SignUp extends JFrame implements ActionListener {
 			email = emailT.getText();
 			sex = 0;
 			status = 0;
+
+			if (idT.getText().equals("영문입력") || nameT.getText().equals("이름을 입력하세요.")
+					|| birthT.getText().equals("생년월일 8자리") || emailT.getText().equals("이메일을 입력하세요")) {
+				JOptionPane.showMessageDialog(this, "회원정보를 기입하십시오.");
+				return;
+			}
+
+			if (idCheck == false) {
+				JOptionPane.showMessageDialog(this, "아이디 중복체크를 먼저 진행하십시오.");
+				return;
+			}
+			if (pwdCheck == false) {
+				JOptionPane.showMessageDialog(this, "비밀번호는 숫자를 포함한 영문8자리여야 합니다. ");
+				return;
+			}
+			
+			String emailC = emailT.getText();
+			String emailP =  "[\\w\\~\\-\\.]+@[\\w\\~\\-]+(\\.[\\w\\~\\-]+)+";
+			boolean emailB = Pattern.matches(emailP, emailC);
+			if(emailB == false) {
+				JOptionPane.showMessageDialog(this, "이메일 형식으로 기입하십시오.");
+				return;
+			}
 
 			if (femaleB.isSelected()) {
 				sex = 1;
@@ -248,6 +289,7 @@ public class SignUp extends JFrame implements ActionListener {
 				list.add(memberDTO);
 				InsertTest insertTest = new InsertTest();
 				insertTest.insertMember();
+				insertTest.insertMemberExtra();//추가 0520 gahui
 				JOptionPane.showMessageDialog(this, "관리자 아이디가 생성되었습니다.");
 				dispose();
 
@@ -256,33 +298,56 @@ public class SignUp extends JFrame implements ActionListener {
 				list.add(memberDTO);
 				InsertTest insertTest = new InsertTest();
 				insertTest.insertMember();
+				insertTest.insertMemberExtra(); //추가 0520 gahui
 				JOptionPane.showMessageDialog(this, "회원 아이디가 생성되었습니다.");
 				dispose();
 			}
+			//------------중복 체크 버튼-----------------------------
 		} else if (e.getSource() == btnNewButton) {
+			if (idT.getText().equals("영문입력")) {
+				JOptionPane.showMessageDialog(this, "아이디를 입력하십시오.");
+				return;
+			}
+
 			String id = idT.getText();
-			for (int i = 0; i < list.size(); i++) {
-				if (!(id.equals(list.get(i).getId()))) {
-					JOptionPane.showMessageDialog(this, "사용가능한 아이디입니다.");
-					idCheck = true;
-				} else {
-					JOptionPane.showMessageDialog(this, "존재하는 아이디입니다.");
+			String p = "^[0-9a-zA-Z]+$";
+			boolean idC = Pattern.matches(p, id);
+			if (idC == true)// p조건이 맞는지 검사하여 m에 저장
+				System.out.println("조건 일치");
+			else {
+				JOptionPane.showMessageDialog(this, "영문 혹은 숫자로 입력해주십시오.");
+				return;
+			}
+
+			list = new MemberDAO().getMemberList();// 0514추가 수정
+			int i;
+			for (i = 0; i < list.size(); i++) {
+				if ((id.equals(list.get(i).getId()))) {
+					JOptionPane.showMessageDialog(this, "중복된 아이디 입니다.");
+					return;
 				}
 			}
+
+			JOptionPane.showMessageDialog(this, "사용 가능한 아이디입니다.");
+			idCheck = true;
 		}
 
 	}
 
+	private boolean matches(Matcher m) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	// inner class / DB에다가 회원정보 넣는다.---------------------------------------
-	//				 MEMBER_TABLE
+	// MEMBER_TABLE
 	public class InsertTest {
 		String driver = "oracle.jdbc.driver.OracleDriver";
-		String url = "jdbc:oracle:thin:@localhost:1521:xe";
+		String url = "jdbc:oracle:thin:@192.168.0.61:1521:xe";
 		String username = "c##member";
 		String password = "1234";
 		Connection conn;
 		PreparedStatement pstmt;
-		ResultSet rs;
 
 		public InsertTest() {
 			try {
@@ -316,6 +381,7 @@ public class SignUp extends JFrame implements ActionListener {
 				pstmt.setInt(6, sex);
 				pstmt.setInt(7, status);
 				pstmt.setInt(8, state);
+
 				int su = pstmt.executeUpdate();// 실행
 				System.out.println(su + "명 회원가입 완료");
 
@@ -334,41 +400,30 @@ public class SignUp extends JFrame implements ActionListener {
 			}
 
 		}
-		public List<MemberDTO> getMemberList() {
-			List<MemberDTO> list = new ArrayList<MemberDTO>();
-			getConnection();
-			String sql = "select*from MEMBER_TABLE";
+		public void insertMemberExtra() { //0520 추가 -gahui
+			this.getConnection();
+			String sql = "insert into MEMBEREXTRA_TABLE(id) values(?)";
 			try {
 				pstmt = conn.prepareStatement(sql);
-				rs = pstmt.executeQuery();
-				while (rs.next()) {
-					MemberDTO memberDTO = new MemberDTO();
-					memberDTO.setSeq(rs.getInt("NO_SEQ"));// seq
-					memberDTO.setId(rs.getString("id"));// id
-					memberDTO.setPassword(rs.getString("password"));//
-					memberDTO.setName(rs.getString("name"));//
-					memberDTO.setBirth(rs.getString("birth"));//
-					memberDTO.setEmail(rs.getString("email"));// email
-					memberDTO.setSex(rs.getInt("sex"));// sex
-					memberDTO.setStatus(rs.getInt("status"));// state 관리자
-					memberDTO.setState(rs.getInt("state"));// status 연체
-					list.add(memberDTO);
-				}
+				pstmt.setString(1, id);
+
+				int su = pstmt.executeUpdate();// 실행
+				System.out.println(su + "명 회원가입 완료");
+
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} finally {
 				try {
-					if (rs != null)
-						rs.close();
 					if (pstmt != null)
 						pstmt.close();
-					if (conn != null)
+					if (pstmt != null)
 						conn.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+
 			}
-			return list;
+			
 		}
 
 	}
