@@ -1,4 +1,4 @@
-package ManagerFrame;
+package managerFrame;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -7,8 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
-import Login.MemberDTO;
-import Login.SignUp;
+//import manager.chat.ChatManager2;
 
 public class BasicFrameManager extends JFrame {
     public BookManagement p1;
@@ -17,13 +16,13 @@ public class BasicFrameManager extends JFrame {
     public BlackList p4;
     public ManagerManagement p5;
     public MemberManagement p6;
+    public DeleteBookList p7;
     
+
     public BasicFrameManager() {
-    	
-    	
+      	
         super("Library");
 
-        
         JTabbedPane t = new JTabbedPane(); // JTabbedPane생성
 
         p1 = new BookManagement();
@@ -32,9 +31,11 @@ public class BasicFrameManager extends JFrame {
         p4 = new BlackList();
         p5 = new ManagerManagement();
         p6 = new MemberManagement();
+        p7 = new DeleteBookList();
 
         JTabbedPane tab = new JTabbedPane();
         tab.add(p1,"도서관리");
+        tab.add(p7, "삭제도서관리");
         tab.add(p2,"대여관리");
         tab.add(p3,"도서현황");
         tab.add(p4,"연체자");
@@ -56,7 +57,7 @@ public class BasicFrameManager extends JFrame {
             }
         });
             
-    }
+    }    
 
     public static void main(String[] args) {
         new BasicFrameManager();

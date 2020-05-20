@@ -1,7 +1,8 @@
-package ManagerFrame;
+package managerFrame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -10,8 +11,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -26,12 +30,19 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 
-import Login.MemberDTO;
+import login.SignUp;
+import manager.dao.LendDAO;
+import manager.dao.MemberDAO;
+import manager.dto.LendDTO;
+import manager.dto.LendJoinDTO;
+import manager.dto.MemberDTO;
 
 public class MemberManagement extends JPanel implements ActionListener, ListSelectionListener {
 
-	private JButton searchBtn, inquiryBtn, withdrawBtn;
+	private JButton searchBtn, inquiryBtn, withdrawBtn, allSearchBtn;
 
 	private JTextField searchT;
 	private JLabel labelL;
@@ -42,7 +53,9 @@ public class MemberManagement extends JPanel implements ActionListener, ListSele
 
 	private JPanel p, p1, p2, p3, pp12, p4;
 	private MemberDAO memberDAO = new MemberDAO();// 0514추가
-	public  List<MemberDTO> list = new ArrayList<MemberDTO>();// 0514추가 수정
+	private LendDAO lendDAO = new LendDAO();// 0518추가
+	public List<MemberDTO> list = new ArrayList<MemberDTO>();
+	public List<LendDTO> lendList = new ArrayList<LendDTO>();// 0518추가
 
 	public void paintComponent(Graphics g) {
 		Dimension d = getSize();
@@ -61,6 +74,7 @@ public class MemberManagement extends JPanel implements ActionListener, ListSele
 		searchBtn = new JButton("검색");
 		inquiryBtn = new JButton("조회");
 		withdrawBtn = new JButton("탈퇴");
+		allSearchBtn = new JButton("전체조회");
 
 		// 텍스트필드 생성
 		searchT = new JTextField("안녕하세요", 30);
@@ -86,6 +100,9 @@ public class MemberManagement extends JPanel implements ActionListener, ListSele
 		};
 		table = new JTable(model);
 
+		lendList = lendDAO.getLendList();
+		Date today = new Date();
+
 		list = memberDAO.getMemberList();
 		if (list != null) {
 			for (MemberDTO dto : list) {
@@ -98,18 +115,18 @@ public class MemberManagement extends JPanel implements ActionListener, ListSele
 					v1.add(dto.getEmail());
 					if (dto.getSex() == 0)
 						v1.add("남성");
-					if (dto.getSex() == 1)
+					else if (dto.getSex() == 1)
 						v1.add("여성");
-					if (dto.getState() == 0)
-						v1.add("");
-					if (dto.getState() == 1)
-						v1.add("연체자");
-
+					for (LendDTO dto1 : lendList) {
+						if (dto1.getName().equals(dto.getName()) && today.after(dto1.getReturnDate())) {
+							v1.add("연체자");
+						}
+					}
 					model.addRow(v1);
 				}
 			}
 		}
-
+		
 		// JScrollPanedp table 추가
 		JScrollPane scroll = new JScrollPane(table);
 		scroll.setPreferredSize(new Dimension(1000, 430));
@@ -125,6 +142,7 @@ public class MemberManagement extends JPanel implements ActionListener, ListSele
 		p2.add(combo);
 		p2.add(searchT);
 		p2.add(searchBtn);
+		p2.add(allSearchBtn);
 		p2.setBackground(new Color(255, 0, 0, 0));
 
 		pp12 = new JPanel();
@@ -163,6 +181,8 @@ public class MemberManagement extends JPanel implements ActionListener, ListSele
 				searchT.setText("");
 			}
 		});
+		allSearchBtn.addActionListener(this);
+
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -203,13 +223,17 @@ public class MemberManagement extends JPanel implements ActionListener, ListSele
 					}
 				}
 			}
-		} else if (e.getSource() == inquiryBtn) { //0514수정
+		} else if (e.getSource() == inquiryBtn) { // 0515 버튼 기능 전체 수정
 			// 조회 버튼 , 마이페이지
 			if (table.getSelectedRow() == -1)
 				return;
 			int index = table.getSelectedRow();
-			MemberDTO memberDTO = list.get(index);
-			new UserPage(memberDTO);
+			String selectedID = (String) table.getValueAt(index, 0);
+			for (MemberDTO memberDTO : list) {
+				if (selectedID == memberDTO.getId()) {
+					new UserPage(memberDTO);
+				}
+			}
 
 		} else if (e.getSource() == withdrawBtn) {
 			// 회원리스트 삭제
@@ -222,8 +246,51 @@ public class MemberManagement extends JPanel implements ActionListener, ListSele
 				memberDAO.deleteMember(memberDTO);
 				model.removeRow(index);
 			}
+		} else if(e.getSource() == allSearchBtn) {
+			System.out.println("dd");
+			lendList = lendDAO.getLendList();
+			Date today = new Date();
+
+			list = memberDAO.getMemberList();
+			model.setRowCount(0);
+			if (list != null) {
+				for (MemberDTO dto : list) {
+					if (dto.getStatus() == 0) {
+						Vector<String> v1 = new Vector<String>();
+						v1.add(dto.getId());
+						v1.add(dto.getName());
+						v1.add(dto.getBirth());
+						v1.add(dto.getAge() + "");
+						v1.add(dto.getEmail());
+						if (dto.getSex() == 0)
+							v1.add("남성");
+						else if (dto.getSex() == 1)
+							v1.add("여성");
+						for (LendDTO dto1 : lendList) {
+							if (dto1.getName().equals(dto.getName()) && today.after(dto1.getReturnDate())) {
+								v1.add("연체자");
+							}
+						}
+						model.addRow(v1);
+					}
+				}
+			}
+			
 		}
 	}// actionPerformed()
+
+	public void resizeColumnWidth(JTable table) {
+		final TableColumnModel columnModel = table.getColumnModel();
+		for (int column = 0; column < table.getColumnCount(); column++) {
+			int width = 10; // 최소 가로길이
+			for (int row = 0; row < table.getRowCount(); row++) {
+				TableCellRenderer renderer = table.getCellRenderer(row, column);
+				Component comp = table.prepareRenderer(renderer, row, column);
+				width = Math.max(comp.getPreferredSize().width + 1, width);
+			}
+			columnModel.getColumn(column).setPreferredWidth(width);
+		}
+	}
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {

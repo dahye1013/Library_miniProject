@@ -1,4 +1,4 @@
-package ManagerFrame;
+package managerFrame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -25,13 +25,13 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
 
-import Login.MemberDTO;
-import Login.SignUp;
-import MemberFrame.MyPage;
+import login.SignUp;
+import manager.dao.MemberDAO;
+import manager.dto.MemberDTO;
 
 public class ManagerManagement extends JPanel implements ActionListener {
 
-	private JButton searchBtn, inquiryBtn, withdrawBtn;
+	private JButton searchBtn, inquiryBtn, withdrawBtn, allSearchBtn;
 
 	private JTextField searchT;
 	private JLabel labelL;
@@ -40,8 +40,9 @@ public class ManagerManagement extends JPanel implements ActionListener {
 	private DefaultTableModel model;
 	private JTable table;
 	private MemberDAO memberDAO = new MemberDAO();// 0514추가
-	List<MemberDTO> list = new ArrayList<MemberDTO>(); // 0514추가 수정
-
+	List<MemberDTO> list = new ArrayList<MemberDTO>(); 
+	
+	
 	private JPanel p, p1, p2, p3, pp12, p4;
 
 	public void paintComponent(Graphics g) {
@@ -61,6 +62,7 @@ public class ManagerManagement extends JPanel implements ActionListener {
 		searchBtn = new JButton("검색");
 		inquiryBtn = new JButton("조회");
 		withdrawBtn = new JButton("탈퇴");
+		allSearchBtn = new JButton("전체조회");
 
 		// 텍스트필드 생성
 		searchT = new JTextField("안녕하세요", 30);
@@ -77,16 +79,19 @@ public class ManagerManagement extends JPanel implements ActionListener {
 		v.add("나이");
 		v.add("email");
 		v.add("성별");
+		//v.add("직책");---------이게 들어가는지 안들어가는지
 		model = new DefaultTableModel(v, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) { // 0514 수정, 입력 불가
 				return false;
 			}
 		};
+		
 		table = new JTable(model);
 
 //        model.setRowCount(0); 
-		list = memberDAO.getMemberList();
+		//List<MemberDTO> list = new ArrayList<MemberDTO>(); // 0514추가 수정
+		list = memberDAO.getMemberList(); 
 		if (list != null) {
 			for (MemberDTO dto : list) {
 				if (dto.getStatus() == 1) {
@@ -103,7 +108,7 @@ public class ManagerManagement extends JPanel implements ActionListener {
 					model.addRow(v1);
 				}
 			}
-		} // 0514추가 수정
+		}
 
 		// JScrollPanedp table 추가
 		JScrollPane scroll = new JScrollPane(table);
@@ -120,6 +125,7 @@ public class ManagerManagement extends JPanel implements ActionListener {
 		p2.add(combo);
 		p2.add(searchT);
 		p2.add(searchBtn);
+		p2.add(allSearchBtn);
 		p2.setBackground(new Color(255, 0, 0, 0));
 
 		pp12 = new JPanel();
@@ -135,7 +141,7 @@ public class ManagerManagement extends JPanel implements ActionListener {
 
 		// 조회, 탈퇴 버튼
 		p4 = new JPanel();
-		p4.add(inquiryBtn);
+		//p4.add(inquiryBtn);
 		p4.add(withdrawBtn);
 		p4.setBackground(new Color(255, 0, 0, 0));
 
@@ -151,13 +157,15 @@ public class ManagerManagement extends JPanel implements ActionListener {
 
 		// 이벤트
 		searchBtn.addActionListener(this);
-		inquiryBtn.addActionListener(this);
+		//inquiryBtn.addActionListener(this);
 		withdrawBtn.addActionListener(this);
 		searchT.addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				searchT.setText("");
 			}
 		});
+		allSearchBtn.addActionListener(this);
+
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -199,17 +207,21 @@ public class ManagerManagement extends JPanel implements ActionListener {
 				}
 			}
 
-		} else if (e.getSource() == inquiryBtn) { // 0514수정
+		} else if (e.getSource() == inquiryBtn) { // 0515 버튼 기능 전체 수정
 			// 조회 버튼 , 마이페이지
 			if (table.getSelectedRow() == -1)
 				return;
+
 			int index = table.getSelectedRow();
-			MemberDTO memberDTO = list.get(index);
-			new UserPage(memberDTO);
+			String selectedID= (String) table.getValueAt(index, 0);
+			for (MemberDTO memberDTO : list) {
+				if(selectedID == memberDTO.getId()) {
+					new UserPage(memberDTO);
+				}
+			}
 
 		} else if (e.getSource() == withdrawBtn) {
 			// 회원리스트 삭제
-			// 0514수정
 			int result = JOptionPane.showConfirmDialog(null, "회원정보를 삭제하시겠습니까?", "회원정보 삭제", JOptionPane.OK_CANCEL_OPTION,
 					JOptionPane.WARNING_MESSAGE, null);
 			if (result == JOptionPane.YES_OPTION) {
@@ -218,6 +230,28 @@ public class ManagerManagement extends JPanel implements ActionListener {
 				memberDAO.deleteMember(memberDTO);
 				model.removeRow(index);
 			}
+		} else if(e.getSource() == allSearchBtn) {
+			list = memberDAO.getMemberList(); 
+			model.setRowCount(0);
+
+			if (list != null) {
+				for (MemberDTO dto : list) {
+					if (dto.getStatus() == 1) {
+						Vector<String> v1 = new Vector<String>();
+						v1.add(dto.getId());
+						v1.add(dto.getName());
+						v1.add(dto.getBirth());
+						v1.add(dto.getAge() + "");
+						v1.add(dto.getEmail());
+						if (dto.getSex() == 0)
+							v1.add("남성");
+						if (dto.getSex() == 1)
+							v1.add("여성");
+						model.addRow(v1);
+					}
+				}
+			}
+			
 		}
 	}// actionPerformed()
 }
